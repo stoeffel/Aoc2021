@@ -1,6 +1,7 @@
 module Aoc.Day1 (Day1 (..)) where
 
-import Aoc.Helpers (Solution (..), intLines)
+import Aoc.Helpers (Solution (..), lines, unsafeParse)
+import Data.Attoparsec.Text (decimal)
 import qualified List
 
 data Day1 = Day1
@@ -11,7 +12,7 @@ instance Solution Day1 where
 
 part1 :: Text -> Int
 part1 input =
-  intLines input
+  unsafeParse (lines decimal) input
     |> countIncreased
 
 countIncreased :: List Int -> Int
@@ -27,7 +28,7 @@ countIncreased lines =
 
 part2 :: Text -> Int
 part2 input =
-  intLines input
+  unsafeParse (lines decimal) input
     |> slidingWindows
     |> countIncreased
 

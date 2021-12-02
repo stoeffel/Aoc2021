@@ -15,9 +15,6 @@ class Typeable a => Solution a where
   name :: a -> Text
   name x = Debug.toString (typeOf x)
 
-intLines :: Text -> List Int
-intLines = unsafeParse (lines decimal)
-
 unsafeParse :: Parser a -> Text -> a
 unsafeParse parser input =
   case parseOnly parser input of
