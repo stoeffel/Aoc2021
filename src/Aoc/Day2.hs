@@ -1,4 +1,4 @@
-module Aoc.Day2 (part1, part2) where
+module Aoc.Day2 (Day2 (..)) where
 
 import Aoc.Helpers
 import Control.Applicative ((*>))
@@ -7,6 +7,12 @@ import Data.Foldable (asum)
 import qualified List
 import Prelude (pure)
 import qualified Prelude
+
+data Day2 = Day2
+
+instance Solution Day2 where
+  solution1 _ = part1 >> Debug.toString
+  solution2 _ = part2 >> Debug.toString
 
 data Command = Command {direction :: Direction, value :: Int}
   deriving (Show)

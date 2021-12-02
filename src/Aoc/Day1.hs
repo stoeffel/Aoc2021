@@ -1,7 +1,13 @@
-module Aoc.Day1 (part1, part2) where
+module Aoc.Day1 (Day1 (..)) where
 
 import Aoc.Helpers
 import qualified List
+
+data Day1 = Day1
+
+instance Solution Day1 where
+  solution1 _ = part1 >> Debug.toString
+  solution2 _ = part2 >> Debug.toString
 
 part1 :: Text -> Int
 part1 input =

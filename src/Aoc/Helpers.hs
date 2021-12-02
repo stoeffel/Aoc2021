@@ -1,7 +1,19 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
+
 module Aoc.Helpers where
 
 import Control.Applicative (many, (<*))
 import Data.Attoparsec.Text
+import Data.Typeable
+import qualified Prelude
+
+class Typeable a => Solution a where
+  solution1 :: a -> Text -> Text
+  solution1 _ x = x
+  solution2 :: a -> Text -> Text
+  solution2 _ x = x
+  name :: a -> Text
+  name x = Debug.toString (typeOf x)
 
 intLines :: Text -> List Int
 intLines input =
