@@ -1,6 +1,6 @@
 module Aoc.Day1 (Day1 (..)) where
 
-import Aoc.Helpers
+import Aoc.Helpers (Solution (..), intLines)
 import qualified List
 
 data Day1 = Day1

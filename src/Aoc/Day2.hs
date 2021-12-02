@@ -1,8 +1,8 @@
 module Aoc.Day2 (Day2 (..)) where
 
-import Aoc.Helpers
+import Aoc.Helpers (Solution (..), lines, unsafeParse)
 import Control.Applicative ((*>))
-import Data.Attoparsec.Text
+import Data.Attoparsec.Text (Parser, decimal, space, string)
 import Data.Foldable (asum)
 import qualified List
 import Prelude (pure)

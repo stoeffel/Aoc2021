@@ -3,8 +3,8 @@
 module Aoc.Helpers where
 
 import Control.Applicative (many, (<*))
-import Data.Attoparsec.Text
-import Data.Typeable
+import Data.Attoparsec.Text (Parser, decimal, endOfLine, parseOnly)
+import Data.Typeable (Typeable, typeOf)
 import qualified Prelude
 
 class Typeable a => Solution a where
@@ -16,9 +16,7 @@ class Typeable a => Solution a where
   name x = Debug.toString (typeOf x)
 
 intLines :: Text -> List Int
-intLines input =
-  Text.split "\n" input
-    |> List.filterMap Text.toInt
+intLines = unsafeParse (lines decimal)
 
 unsafeParse :: Parser a -> Text -> a
 unsafeParse parser input =
