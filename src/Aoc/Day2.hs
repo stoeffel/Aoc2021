@@ -1,8 +1,11 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module Aoc.Day2 (Day2 (..)) where
 
 import Aoc.Helpers (Solution (..), keywords, lines, unsafeParse)
 import Control.Applicative ((*>))
 import Data.Attoparsec.Text (Parser, decimal, space, string)
+import Data.Default (Default, def)
 import Data.Foldable (asum)
 import qualified List
 import Prelude (pure)
@@ -53,11 +56,11 @@ part1 input =
             Up ->
               (horizontal, depth - value)
       )
-      (0, 0)
+      def
     |> (\(horizontal, depth) -> horizontal * depth)
 
 data Navigation = Navigation {horizontal :: Int, depth :: Int, aim :: Int}
-  deriving (Show)
+  deriving (Show, Generic, Default)
 
 part2 :: Text -> Int
 part2 input =
@@ -75,5 +78,5 @@ part2 input =
             Up ->
               nav {aim = aim - value}
       )
-      (Navigation 0 0 0)
+      def
     |> (\Navigation {horizontal, depth} -> horizontal * depth)
