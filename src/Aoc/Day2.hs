@@ -1,6 +1,6 @@
 module Aoc.Day2 (Day2 (..)) where
 
-import Aoc.Helpers (Solution (..), lines, unsafeParse)
+import Aoc.Helpers (Solution (..), keywords, lines, unsafeParse)
 import Control.Applicative ((*>))
 import Data.Attoparsec.Text (Parser, decimal, space, string)
 import Data.Foldable (asum)
@@ -34,10 +34,10 @@ commandParser = do
 
 directionParser :: Parser Direction
 directionParser =
-  asum
-    [ string "forward" *> pure Forward,
-      string "down" *> pure Down,
-      string "up" *> pure Up
+  keywords
+    [ ("forward", Forward),
+      ("down", Down),
+      ("up", Up)
     ]
 
 part1 :: Text -> Int

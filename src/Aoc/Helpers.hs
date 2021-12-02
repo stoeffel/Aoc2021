@@ -3,7 +3,8 @@
 module Aoc.Helpers where
 
 import Control.Applicative (many, (<*))
-import Data.Attoparsec.Text (Parser, decimal, endOfLine, parseOnly)
+import Data.Attoparsec.Text (Parser, decimal, endOfLine, parseOnly, string)
+import Data.Foldable (asum)
 import Data.Typeable (Typeable, typeOf)
 import qualified Prelude
 
@@ -23,3 +24,8 @@ unsafeParse parser input =
 
 lines :: Parser a -> Parser (List a)
 lines p = many (p <* endOfLine)
+
+keywords :: List (Text, a) -> Parser a
+keywords =
+  List.map (\(x, y) -> Prelude.pure y <* string x)
+    >> asum
