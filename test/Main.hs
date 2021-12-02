@@ -1,6 +1,9 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Main (main) where
 
 import qualified Aoc.Day1
+import qualified Aoc.Day2
 import qualified Data.Text.IO
 import qualified Expect
 import Test (Test, describe, test)
@@ -15,35 +18,24 @@ tests :: Test
 tests =
   describe
     "AoC21"
-    [ describe
-        "day1"
-        [ test "example" <| \() -> do
-            input <-
-              Data.Text.IO.readFile "test/assets/day1-example-part1.txt"
-                |> Expect.fromIO
-            Aoc.Day1.part1 input
-              |> Debug.toString
-              |> Expect.equalToContentsOf "test/golden-results/day1-example-part1.hs",
-          test "real" <| \() -> do
-            input <-
-              Data.Text.IO.readFile "test/assets/day1-part1.txt"
-                |> Expect.fromIO
-            Aoc.Day1.part1 input
-              |> Debug.toString
-              |> Expect.equalToContentsOf "test/golden-results/day1-part1.hs",
-          test "example part2" <| \() -> do
-            input <-
-              Data.Text.IO.readFile "test/assets/day1-example-part2.txt"
-                |> Expect.fromIO
-            Aoc.Day1.part2 input
-              |> Debug.toString
-              |> Expect.equalToContentsOf "test/golden-results/day1-example-part2.hs",
-          test "real part2" <| \() -> do
-            input <-
-              Data.Text.IO.readFile "test/assets/day1-part2.txt"
-                |> Expect.fromIO
-            Aoc.Day1.part2 input
-              |> Debug.toString
-              |> Expect.equalToContentsOf "test/golden-results/day1-part2.hs"
-        ]
+    [ -- Day1
+      mkTest Aoc.Day1.part1 "day1" "example-part1",
+      mkTest Aoc.Day1.part1 "day1" "part1",
+      mkTest Aoc.Day1.part2 "day1" "example-part2",
+      mkTest Aoc.Day1.part2 "day1" "part2",
+      -- Day2
+      mkTest Aoc.Day2.part1 "day2" "example-part1",
+      mkTest Aoc.Day2.part1 "day2" "part1",
+      mkTest Aoc.Day2.part2 "day2" "example-part2",
+      mkTest Aoc.Day2.part2 "day2" "part2"
     ]
+
+mkTest :: Show a => (Text -> a) -> Text -> Text -> Test
+mkTest run dayX partX =
+  test (dayX ++ "-" ++ partX) <| \() -> do
+    input <-
+      Data.Text.IO.readFile (Text.toList <| "test/assets/" ++ dayX ++ "-" ++ partX ++ ".txt")
+        |> Expect.fromIO
+    run input
+      |> Debug.toString
+      |> Expect.equalToContentsOf ("test/golden-results/" ++ dayX ++ "-" ++ partX ++ ".hs")
