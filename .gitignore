@@ -1,0 +1,5 @@
+.stack-work
+.history
+*.cabal
+Setup.hs
+dist-newstyle
