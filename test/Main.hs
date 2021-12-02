@@ -75,27 +75,24 @@ mkTests :: (Solution b) => b -> Test
 mkTests solution =
   describe
     (name solution)
-    [ mkTest (solution1 solution) (name solution) "example-part1",
-      mkTest (solution1 solution) (name solution) "part1",
-      mkTest (solution2 solution) (name solution) "example-part2",
-      mkTest (solution2 solution) (name solution) "part2"
+    [ mkTest (solution1 solution) solution "-example-part1",
+      mkTest (solution1 solution) solution "-part1",
+      mkTest (solution2 solution) solution "-example-part2",
+      mkTest (solution2 solution) solution "-part2"
     ]
 
-mkTest :: (Text -> Text) -> Text -> Text -> Test
-mkTest run dayX partX =
-  let testName = Text.toLower dayX ++ "-" ++ partX
-   in test testName <| \() -> do
-        let asset = Text.toList <| "test/assets/" ++ testName ++ ".txt"
-        exists <-
-          Directory.doesFileExist asset
-            |> Expect.fromIO
-        if exists
-          then do
-            input <-
-              Data.Text.IO.readFile asset
-                |> Expect.fromIO
-            run input
-              |> Expect.equalToContentsOf ("test/golden-results/" ++ testName ++ ".hs")
-          else do
-            Expect.fromIO (Data.Text.IO.writeFile asset "TODO")
-            Expect.fail "No asset file found (created one)"
+mkTest :: Solution a => (Text -> Text) -> a -> Text -> Test
+mkTest run solution partX =
+  test testName <| \() -> do
+    let asset = Text.toList <| "test/assets/" ++ testName ++ ".txt"
+    exists <- Directory.doesFileExist asset |> Expect.fromIO
+    if exists
+      then do
+        input <- Data.Text.IO.readFile asset |> Expect.fromIO
+        run input
+          |> Expect.equalToContentsOf ("test/golden-results/" ++ testName ++ ".hs")
+      else do
+        Expect.fromIO (Data.Text.IO.writeFile asset "TODO")
+        Expect.fail "No asset file found (created one)"
+  where
+    testName = Text.toLower (name solution) ++ partX
