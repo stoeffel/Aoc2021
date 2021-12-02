@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Aoc.Day2 (Day2 (..)) where
+module Aoc.Day02 (Day02 (..)) where
 
 import Aoc.Helpers (Solution (..), keywords, lines, unsafeParse)
 import Control.Applicative ((*>))
@@ -11,9 +11,9 @@ import qualified List
 import Prelude (pure)
 import qualified Prelude
 
-data Day2 = Day2
+data Day02 = Day02
 
-instance Solution Day2 where
+instance Solution Day02 where
   solution1 _ = part1 >> Debug.toString
   solution2 _ = part2 >> Debug.toString
 

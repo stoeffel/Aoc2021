@@ -3,7 +3,15 @@
 
 module Main (main) where
 
-import qualified Aoc.Day1
+import qualified Aoc.Day01
+import qualified Aoc.Day02
+import qualified Aoc.Day03
+import qualified Aoc.Day04
+import qualified Aoc.Day05
+import qualified Aoc.Day06
+import qualified Aoc.Day07
+import qualified Aoc.Day08
+import qualified Aoc.Day09
 import qualified Aoc.Day10
 import qualified Aoc.Day11
 import qualified Aoc.Day12
@@ -14,20 +22,12 @@ import qualified Aoc.Day16
 import qualified Aoc.Day17
 import qualified Aoc.Day18
 import qualified Aoc.Day19
-import qualified Aoc.Day2
 import qualified Aoc.Day20
 import qualified Aoc.Day21
 import qualified Aoc.Day22
 import qualified Aoc.Day23
 import qualified Aoc.Day24
 import qualified Aoc.Day25
-import qualified Aoc.Day3
-import qualified Aoc.Day4
-import qualified Aoc.Day5
-import qualified Aoc.Day6
-import qualified Aoc.Day7
-import qualified Aoc.Day8
-import qualified Aoc.Day9
 import Aoc.Helpers
 import qualified Data.Text.IO
 import qualified Expect
@@ -44,15 +44,15 @@ tests :: Test
 tests =
   describe
     "AoC21"
-    [ mkTests Aoc.Day1.Day1,
-      mkTests Aoc.Day2.Day2,
-      mkTests Aoc.Day3.Day3,
-      mkTests Aoc.Day4.Day4,
-      mkTests Aoc.Day5.Day5,
-      mkTests Aoc.Day6.Day6,
-      mkTests Aoc.Day7.Day7,
-      mkTests Aoc.Day8.Day8,
-      mkTests Aoc.Day9.Day9,
+    [ mkTests Aoc.Day01.Day01,
+      mkTests Aoc.Day02.Day02,
+      mkTests Aoc.Day03.Day03,
+      mkTests Aoc.Day04.Day04,
+      mkTests Aoc.Day05.Day05,
+      mkTests Aoc.Day06.Day06,
+      mkTests Aoc.Day07.Day07,
+      mkTests Aoc.Day08.Day08,
+      mkTests Aoc.Day09.Day09,
       mkTests Aoc.Day10.Day10,
       mkTests Aoc.Day11.Day11,
       mkTests Aoc.Day12.Day12,

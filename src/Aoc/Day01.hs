@@ -1,12 +1,12 @@
-module Aoc.Day1 (Day1 (..)) where
+module Aoc.Day01 (Day01 (..)) where
 
 import Aoc.Helpers (Solution (..), lines, unsafeParse)
 import Data.Attoparsec.Text (decimal)
 import qualified List
 
-data Day1 = Day1
+data Day01 = Day01
 
-instance Solution Day1 where
+instance Solution Day01 where
   solution1 _ = part1 >> Debug.toString
   solution2 _ = part2 >> Debug.toString
 
