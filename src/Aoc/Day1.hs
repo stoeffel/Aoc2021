@@ -28,8 +28,7 @@ part2 input =
 slidingWindows :: List Int -> List Int
 slidingWindows lines =
   List.map3
-    (,,)
+    (\a b c -> a + b + c)
     lines
     (List.drop 1 lines)
     (List.drop 2 lines)
-    |> List.map (\(a, b, c) -> a + b + c)
