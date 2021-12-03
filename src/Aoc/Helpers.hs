@@ -29,3 +29,6 @@ keywords :: List (Text, a) -> Parser a
 keywords =
   List.map (\(x, y) -> Prelude.pure y <* string x)
     >> asum
+
+count :: Eq a => a -> List a -> Int
+count toCount = List.filter (== toCount) >> List.length
