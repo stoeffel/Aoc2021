@@ -3,7 +3,7 @@ synopsis: Verify examples in your docs.
 description: Please see the README at <https://github.com/Stoeffel/aoc21/tree/trunk/#readme>.
 author: stoeffel
 version: 0.0.0.1
-maintainer: haskell-open-source@noredink.com
+maintainer: schtoeffel@gmail.com
 copyright: stoeffel
 github: stoeffel/aoc21
 license-file: LICENSE

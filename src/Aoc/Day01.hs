@@ -1,7 +1,7 @@
 module Aoc.Day01 (Day01 (..)) where
 
-import Aoc.Helpers (Solution (..), lines, unsafeParse)
-import Data.Attoparsec.Text (decimal)
+import Aoc.Helpers (Solution (..))
+import Aoc.Parser (decimal, lines, unsafeParse)
 import qualified List
 
 data Day01 = Day01

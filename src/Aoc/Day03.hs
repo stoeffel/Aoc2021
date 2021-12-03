@@ -1,7 +1,8 @@
 module Aoc.Day03 (Day03 (..)) where
 
 import qualified Aoc.Bits as Bits
-import Aoc.Helpers (Solution (..), lines, unsafeParse)
+import Aoc.Helpers (Solution (..))
+import Aoc.Parser (lines, unsafeParse)
 import Control.Applicative ((*>))
 import Data.List (transpose)
 import qualified List

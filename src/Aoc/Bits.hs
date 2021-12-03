@@ -10,10 +10,8 @@ module Aoc.Bits
 where
 
 import Aoc.Helpers (count)
-import Control.Applicative ((*>))
-import Data.Attoparsec.Text (Parser, char, many1)
+import Aoc.Parser (Parser, oneOf, char, many1, (*>))
 import qualified Data.Bits as Bits
-import Data.Foldable (asum)
 import qualified List
 import qualified Prelude
 
@@ -27,7 +25,7 @@ parser = many1 bitParser
 
 bitParser :: Parser Bit
 bitParser = do
-  asum
+  oneOf
     [ char '1' *> Prelude.pure One,
       char '0' *> Prelude.pure Zero
     ]
