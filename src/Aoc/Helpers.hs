@@ -1,14 +1,13 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE FunctionalDependencies #-}
 
 module Aoc.Helpers where
 
 import Data.Typeable (Typeable, typeOf)
 
-class Typeable a => Solution a where
-  solution1 :: a -> Text -> Text
-  solution1 _ x = x
-  solution2 :: a -> Text -> Text
-  solution2 _ x = x
+class (Typeable a, Show b) => Solution a b | a -> b where
+  solution1 :: a -> Text -> b
+  solution2 :: a -> Text -> b
   name :: a -> Text
   name x = Debug.toString (typeOf x)
 

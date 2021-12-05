@@ -5,10 +5,10 @@ module Aoc.Day02 (Day02 (..)) where
 import Aoc.Helpers (Solution (..))
 import Aoc.Parser
   ( Parser,
-    oneOf,
     decimal,
     keywords,
     lines,
+    oneOf,
     space,
     string,
     unsafeParse,
@@ -21,9 +21,9 @@ import qualified Prelude
 
 data Day02 = Day02
 
-instance Solution Day02 where
-  solution1 _ = part1 >> Debug.toString
-  solution2 _ = part2 >> Debug.toString
+instance Solution Day02 Int where
+  solution1 _ = part1
+  solution2 _ = part2
 
 data Command = Command {direction :: Direction, value :: Int}
   deriving (Show)

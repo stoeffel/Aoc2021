@@ -5,4 +5,6 @@ import qualified List
 
 data Day13 = Day13
 
-instance Solution Day13
+instance Solution Day13 Text where
+  solution1 _ = identity
+  solution2 _ = identity

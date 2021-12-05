@@ -12,9 +12,9 @@ import qualified Prelude
 
 data Day04 = Day04
 
-instance Solution Day04 where
-  solution1 _ = part1 >> Debug.toString
-  solution2 _ = part2 >> Debug.toString
+instance Solution Day04 (Maybe Int) where
+  solution1 _ = part1
+  solution2 _ = part2
 
 data Game = Game
   { boards :: List (Board Cell),

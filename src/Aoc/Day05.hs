@@ -9,9 +9,9 @@ import qualified Prelude
 
 data Day05 = Day05
 
-instance Solution Day05 where
-  solution1 _ = part1 >> Debug.toString
-  solution2 _ = part2 >> Debug.toString
+instance Solution Day05 Int where
+  solution1 _ = part1
+  solution2 _ = part2
 
 part1 :: Text -> Int
 part1 input =

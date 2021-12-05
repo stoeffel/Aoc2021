@@ -71,7 +71,7 @@ tests =
       mkTests Aoc.Day25.Day25
     ]
 
-mkTests :: (Solution b) => b -> Test
+mkTests :: (Solution a b) => a -> Test
 mkTests solution =
   describe
     (name solution)
@@ -83,7 +83,7 @@ mkTests solution =
 
 data Part = Part1 | Part2 | Part1Example | Part2Example
 
-mkTest :: Solution a => (Text -> Text) -> a -> Part -> Test
+mkTest :: Solution a b => (Text -> b) -> a -> Part -> Test
 mkTest run solution partX =
   test testName <| \() -> do
     let asset = Text.toList <| "test/assets/" ++ assetName ++ ".txt"
@@ -92,6 +92,7 @@ mkTest run solution partX =
       then do
         input <- Data.Text.IO.readFile asset |> Expect.fromIO
         run input
+          |> Debug.toString
           |> Expect.equalToContentsOf ("test/golden-results/" ++ testName ++ ".hs")
       else do
         Expect.fromIO (Data.Text.IO.writeFile asset "TODO")

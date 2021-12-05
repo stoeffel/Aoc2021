@@ -9,9 +9,9 @@ import qualified List
 
 data Day03 = Day03
 
-instance Solution Day03 where
-  solution1 _ = part1 >> Debug.toString
-  solution2 _ = part2 >> Debug.toString
+instance Solution Day03 Int where
+  solution1 _ = part1
+  solution2 _ = part2
 
 part1 :: Text -> Int
 part1 input =
