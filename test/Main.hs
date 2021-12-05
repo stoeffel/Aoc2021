@@ -75,16 +75,18 @@ mkTests :: (Solution b) => b -> Test
 mkTests solution =
   describe
     (name solution)
-    [ mkTest (solution1 solution) solution "-example-part1",
-      mkTest (solution1 solution) solution "-part1",
-      mkTest (solution2 solution) solution "-example-part2",
-      mkTest (solution2 solution) solution "-part2"
+    [ mkTest (solution1 solution) solution Part1Example,
+      mkTest (solution1 solution) solution Part1,
+      mkTest (solution2 solution) solution Part2Example,
+      mkTest (solution2 solution) solution Part2
     ]
 
-mkTest :: Solution a => (Text -> Text) -> a -> Text -> Test
+data Part = Part1 | Part2 | Part1Example | Part2Example
+
+mkTest :: Solution a => (Text -> Text) -> a -> Part -> Test
 mkTest run solution partX =
   test testName <| \() -> do
-    let asset = Text.toList <| "test/assets/" ++ testName ++ ".txt"
+    let asset = Text.toList <| "test/assets/" ++ assetName ++ ".txt"
     exists <- Directory.doesFileExist asset |> Expect.fromIO
     if exists
       then do
@@ -95,4 +97,15 @@ mkTest run solution partX =
         Expect.fromIO (Data.Text.IO.writeFile asset "TODO")
         Expect.fail "No asset file found (created one)"
   where
-    testName = Text.toLower (name solution) ++ partX
+    testName =
+      Text.toLower (name solution)
+        ++ case partX of
+          Part1 -> "-part1"
+          Part2 -> "-part2"
+          Part1Example -> "-part1-example"
+          Part2Example -> "-part2-example"
+    assetName = case partX of
+      Part1 -> Text.toLower (name solution)
+      Part2 -> Text.toLower (name solution)
+      Part1Example -> Text.toLower (name solution) ++ "-example"
+      Part2Example -> Text.toLower (name solution) ++ "-example"
