@@ -4,13 +4,12 @@ module Aoc.Bits
     mostCommonBit,
     complement,
     reverseBit,
-    toInt,
     multiply,
   )
 where
 
 import Aoc.Helpers (count)
-import Aoc.Parser (Parser, oneOf, char, many1, (*>))
+import Aoc.Parser (Parser, char, many1, oneOf, (*>))
 import qualified Data.Bits as Bits
 import qualified List
 import qualified Prelude

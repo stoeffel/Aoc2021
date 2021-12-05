@@ -4,7 +4,6 @@ module Aoc.Line
     intersections,
     orientation,
     Orientation (..),
-    slope,
   )
 where
 
@@ -12,7 +11,7 @@ import qualified Aoc.Parser as P
 import Dict (Dict)
 import qualified Dict
 import qualified List
-import Prelude (flip, pure)
+import Prelude (flip, otherwise, pure)
 
 data Line = Line {start :: Point, end :: Point}
   deriving (Show, Eq)
@@ -40,13 +39,10 @@ parser = do
       pure Point {x, y}
 
 orientation :: Line -> Orientation
-orientation Line {start, end} =
-  if x start == x end
-    then Vertical
-    else
-      if y start == y end
-        then Horizontal
-        else Diagonal
+orientation Line {start, end}
+  | x start == x end = Vertical
+  | y start == y end = Horizontal
+  | otherwise = Diagonal
 
 intersections :: List Line -> Dict Point Int
 intersections lines =
