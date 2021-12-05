@@ -4,6 +4,7 @@ module Aoc.Line
     intersections,
     orientation,
     Orientation (..),
+    slope,
   )
 where
 
@@ -61,17 +62,16 @@ intersections lines =
       )
       Dict.empty
   where
+    range :: Int -> Int -> List Int
+    range x y = if x < y then [x .. y] else [y .. x]
+
     lineToPoints :: Line -> List Point
     lineToPoints line@Line {start, end} =
       case orientation line of
         Horizontal ->
-          List.map
-            (flip Point (y start))
-            (range (x start) (x end))
+          List.map (flip Point (y start)) (range (x start) (x end))
         Vertical ->
-          List.map
-            (Point (x start))
-            (range (y start) (y end))
+          List.map (Point (x start)) (range (y start) (y end))
         Diagonal ->
           let slope' = slope line
            in List.map
@@ -80,8 +80,5 @@ intersections lines =
                 )
                 (range (x start) (x end))
 
-    range :: Int -> Int -> [Int]
-    range x y = if x < y then [x .. y] else [y .. x]
-
-    slope :: Line -> Int
-    slope Line {start, end} = (y end - y start) // (x end - x start)
+slope :: Line -> Int
+slope Line {start, end} = (y end - y start) // (x end - x start)
