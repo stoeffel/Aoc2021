@@ -1,6 +1,3 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE OverloadedStrings #-}
-
 module Main (main) where
 
 import qualified Aoc.Day01
@@ -28,7 +25,7 @@ import qualified Aoc.Day22
 import qualified Aoc.Day23
 import qualified Aoc.Day24
 import qualified Aoc.Day25
-import Aoc.Helpers
+import Aoc.Solution
 import qualified Data.Text.IO
 import qualified Expect
 import qualified System.Directory as Directory
@@ -75,38 +72,43 @@ mkTests :: (Solution a b) => a -> Test
 mkTests solution =
   describe
     (name solution)
-    [ mkTest (solution1 solution) solution Part1Example,
-      mkTest (solution1 solution) solution Part1,
-      mkTest (solution2 solution) solution Part2Example,
-      mkTest (solution2 solution) solution Part2
+    [ mkTest solution Part1 Example,
+      mkTest solution Part1 Real,
+      mkTest solution Part2 Example,
+      mkTest solution Part2 Real
     ]
 
-data Part = Part1 | Part2 | Part1Example | Part2Example
+data Run = Example | Real
 
-mkTest :: Solution a b => (Text -> b) -> a -> Part -> Test
-mkTest run solution partX =
+data Part = Part1 | Part2
+
+mkTest :: Solution a b => a -> Part -> Run -> Test
+mkTest solution partX runX =
   test testName <| \() -> do
-    let asset = Text.toList <| "test/assets/" ++ assetName ++ ".txt"
-    exists <- Directory.doesFileExist asset |> Expect.fromIO
+    let asset =
+          Text.toList <| "test/assets/" ++ case runX of
+            Real -> solutionName ++ ".txt"
+            Example -> solutionName ++ "-example.txt"
+    let run = case partX of
+          Part1 -> solution1
+          Part2 -> solution2
+    exists <- Expect.fromIO (Directory.doesFileExist asset)
     if exists
       then do
-        input <- Data.Text.IO.readFile asset |> Expect.fromIO
-        run input
+        input <- Expect.fromIO (Data.Text.IO.readFile asset)
+        run solution input
           |> Debug.toString
           |> Expect.equalToContentsOf ("test/golden-results/" ++ testName ++ ".hs")
       else do
         Expect.fromIO (Data.Text.IO.writeFile asset "TODO")
         Expect.fail "No asset file found (created one)"
   where
+    solutionName = Text.toLower (name solution)
     testName =
-      Text.toLower (name solution)
+      solutionName
         ++ case partX of
           Part1 -> "-part1"
           Part2 -> "-part2"
-          Part1Example -> "-part1-example"
-          Part2Example -> "-part2-example"
-    assetName = case partX of
-      Part1 -> Text.toLower (name solution)
-      Part2 -> Text.toLower (name solution)
-      Part1Example -> Text.toLower (name solution) ++ "-example"
-      Part2Example -> Text.toLower (name solution) ++ "-example"
+        ++ case runX of
+          Example -> "-example"
+          Real -> ""

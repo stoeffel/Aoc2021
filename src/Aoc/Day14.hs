@@ -1,6 +1,6 @@
 module Aoc.Day14 (Day14 (..)) where
 
-import Aoc.Helpers
+import Aoc.Solution
 import qualified List
 
 data Day14 = Day14

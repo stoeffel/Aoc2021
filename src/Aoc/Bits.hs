@@ -8,32 +8,33 @@ module Aoc.Bits
   )
 where
 
-import Aoc.Helpers (count)
-import Aoc.Parser (Parser, char, many1, oneOf, (*>))
+import qualified Aoc.Counter as Counter
+import Aoc.Parser ((*>))
+import qualified Aoc.Parser as P
 import qualified Data.Bits as Bits
-import qualified List
-import qualified Prelude
+import Prelude (pure)
 
 data Bit = Zero | One
   deriving (Eq, Ord, Show)
 
 type Bits = List Bit
 
-parser :: Parser Bits
-parser = many1 bitParser
-
-bitParser :: Parser Bit
-bitParser = do
-  oneOf
-    [ char '1' *> Prelude.pure One,
-      char '0' *> Prelude.pure Zero
-    ]
+parser :: P.Parser Bits
+parser = P.many1 bitParser
+  where
+    bitParser :: P.Parser Bit
+    bitParser = do
+      P.oneOf
+        [ P.char '1' *> pure One,
+          P.char '0' *> pure Zero
+        ]
 
 mostCommonBit :: Bits -> Bit
 mostCommonBit xs =
-  if count One xs >= count Zero xs
-    then One
-    else Zero
+  Counter.count xs
+    |> Counter.max
+    |> Maybe.map Tuple.first
+    |> Maybe.withDefault One
 
 complement :: Bits -> Bits
 complement = List.map reverseBit

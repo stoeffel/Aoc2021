@@ -3,11 +3,9 @@
 
 module Aoc.Day04 (Day04 (..)) where
 
-import Aoc.Helpers (Solution (..))
 import Aoc.Parser as P
-import Control.Applicative ((<|>))
+import Aoc.Solution (Solution (..))
 import qualified Data.List
-import qualified List
 import qualified Prelude
 
 data Day04 = Day04
@@ -38,14 +36,14 @@ data Marked
 
 gameParser :: P.Parser Game
 gameParser = do
-  draws <- P.sepBy1 P.decimal (P.char ',')
-  _ <- P.count 2 P.endOfLine
-  boards <- P.sepBy1 boardParser P.endOfLine
+  draws <- P.csv P.decimal
+  _ <- P.endOfLine
+  boards <- P.lines boardParser
   Prelude.pure (Game {boards, draws})
 
 boardParser :: P.Parser (Board Cell)
 boardParser =
-  P.count 5 (P.count 5 cellParser <* P.endOfLine)
+  P.count 5 (P.endOfLine *> P.count 5 cellParser)
     |> map Board
 
 cellParser :: P.Parser Cell

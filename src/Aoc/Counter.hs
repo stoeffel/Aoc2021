@@ -1,5 +1,3 @@
-{-# LANGUAGE GADTs #-}
-
 module Aoc.Counter
   ( Counter,
     empty,
@@ -7,12 +5,15 @@ module Aoc.Counter
     count,
     add,
     total,
-    values,
+    toList,
+    max,
   )
 where
 
+import qualified Data.List
 import Dict (Dict)
 import qualified Dict
+import NriPrelude hiding (max)
 
 newtype Counter a = Counter (Dict a Int)
 
@@ -37,7 +38,15 @@ add k new (Counter counter) =
     |> Counter
 
 total :: Counter a -> Int
-total counter = List.sum (values counter)
+total (Counter counter) = List.sum (Dict.values counter)
 
-values :: Counter a -> List Int
-values (Counter counter) = Dict.values counter
+toList :: Counter a -> List (a, Int)
+toList (Counter counter) = Dict.toList counter
+
+max :: Counter a -> Maybe (a, Int)
+max counter =
+  case toList counter of
+    [] -> Nothing
+    xs ->
+      Data.List.maximumBy (\(_, a) (_, b) -> compare a b) xs
+        |> Just

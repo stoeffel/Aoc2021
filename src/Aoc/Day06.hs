@@ -2,40 +2,34 @@ module Aoc.Day06 (Day06 (..)) where
 
 import Aoc.Counter (Counter)
 import qualified Aoc.Counter as Counter
-import Aoc.Helpers (Solution (..))
 import qualified Aoc.Parser as P
-import qualified List
-import Prelude (flip)
+import Aoc.Solution (Solution (..))
 
 data Day06 = Day06
 
 instance Solution Day06 Int where
-  solution1 _ = part1
-  solution2 _ = part2
+  solution1 _ = simulate 80
+  solution2 _ = simulate 256
 
-fishParser :: P.Parser (List Int)
-fishParser = P.sepBy1 (P.decimal) (P.char ',')
+newtype Age = Age Int
+  deriving (Eq, Ord, Num)
 
-part1 :: Text -> Int
-part1 input =
-  P.unsafeParse fishParser input
+simulate :: Int -> Text -> Int
+simulate n input =
+  P.unsafeParse parser input
     |> Counter.count
-    |> ageFishs 80
+    |> ageFishs n
     |> Counter.total
 
-part2 :: Text -> Int
-part2 input =
-  P.unsafeParse fishParser input
-    |> Counter.count
-    |> ageFishs 256
-    |> Counter.total
+parser :: P.Parser (List Age)
+parser = P.csv (map Age P.decimal)
 
-ageFishs :: Int -> Counter Int -> Counter Int
+ageFishs :: Int -> Counter Age -> Counter Age
 ageFishs 0 fishs = fishs
 ageFishs x fishs =
   Counter.foldl ageFish Counter.empty fishs
     |> ageFishs (x - 1)
-
-ageFish :: Int -> Int -> Counter Int -> Counter Int
-ageFish 0 v acc = Counter.add 6 v (Counter.add 8 v acc)
-ageFish k v acc = Counter.add (k - 1) v acc
+  where
+    ageFish :: Age -> Int -> Counter Age -> Counter Age
+    ageFish 0 v acc = Counter.add 6 v (Counter.add 8 v acc)
+    ageFish k v acc = Counter.add (k - 1) v acc

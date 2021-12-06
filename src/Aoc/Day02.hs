@@ -2,22 +2,10 @@
 
 module Aoc.Day02 (Day02 (..)) where
 
-import Aoc.Helpers (Solution (..))
-import Aoc.Parser
-  ( Parser,
-    decimal,
-    keywords,
-    lines,
-    oneOf,
-    space,
-    string,
-    unsafeParse,
-    (*>),
-  )
+import qualified Aoc.Parser as P
+import Aoc.Solution (Solution (..))
 import Data.Default (Default, def)
-import qualified List
 import Prelude (pure)
-import qualified Prelude
 
 data Day02 = Day02
 
@@ -36,16 +24,16 @@ data Direction
   | Up
   deriving (Show)
 
-commandParser :: Parser Command
+commandParser :: P.Parser Command
 commandParser = do
   direction <- directionParser
-  _ <- space
-  value <- decimal
+  _ <- P.space
+  value <- P.decimal
   pure Command {direction, value}
 
-directionParser :: Parser Direction
+directionParser :: P.Parser Direction
 directionParser =
-  keywords
+  P.keywords
     [ ("forward", Forward),
       ("down", Down),
       ("up", Up)
@@ -53,7 +41,7 @@ directionParser =
 
 part1 :: Text -> Int
 part1 input =
-  unsafeParse (lines commandParser) input
+  P.unsafeParse (P.lines commandParser) input
     |> List.foldl simpleEvaluateCommand def
     |> (\(horizontal, depth) -> horizontal * depth)
 
@@ -69,7 +57,7 @@ data Navigation = Navigation {horizontal :: Int, depth :: Int, aim :: Int}
 
 part2 :: Text -> Int
 part2 input =
-  unsafeParse (lines commandParser) input
+  P.unsafeParse (P.lines commandParser) input
     |> List.foldl evaluateCommand def
     |> (\Navigation {horizontal, depth} -> horizontal * depth)
 

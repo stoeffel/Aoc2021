@@ -1,7 +1,7 @@
 module Aoc.Day07 (Day07 (..)) where
 
-import Aoc.Helpers
-import qualified List
+import Aoc.Solution
+import qualified Aoc.Parser as P
 
 data Day07 = Day07
 

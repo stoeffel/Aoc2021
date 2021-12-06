@@ -10,7 +10,6 @@ where
 import Aoc.Counter (Counter)
 import qualified Aoc.Counter as Counter
 import qualified Aoc.Parser as P
-import qualified List
 import Prelude (flip, otherwise, pure)
 
 data Line = Line {start :: Point, end :: Point}

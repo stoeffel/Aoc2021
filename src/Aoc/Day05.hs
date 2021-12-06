@@ -1,11 +1,9 @@
 module Aoc.Day05 (Day05 (..)) where
 
 import qualified Aoc.Counter as Counter
-import Aoc.Helpers (Solution (..))
 import qualified Aoc.Line as Line
 import qualified Aoc.Parser as P
-import qualified List
-import qualified Prelude
+import Aoc.Solution (Solution (..))
 
 data Day05 = Day05
 
@@ -28,6 +26,6 @@ countIntersections :: List Line.Line -> Int
 countIntersections lines =
   lines
     |> Line.intersections
-    |> Counter.values
-    |> List.filter (> 1)
+    |> Counter.toList
+    |> List.filter (\(_, a) -> a > 1)
     |> List.length

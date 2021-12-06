@@ -1,11 +1,9 @@
 module Aoc.Day03 (Day03 (..)) where
 
 import qualified Aoc.Bits as Bits
-import Aoc.Helpers (Solution (..))
-import Aoc.Parser (lines, unsafeParse)
-import Control.Applicative ((*>))
+import qualified Aoc.Parser as P
+import Aoc.Solution (Solution (..))
 import Data.List (transpose)
-import qualified List
 
 data Day03 = Day03
 
@@ -19,7 +17,7 @@ part1 input =
   where
     epsilonRate = Bits.complement gammaRate
     gammaRate =
-      unsafeParse (lines Bits.parser) input
+      P.unsafeParse (P.lines Bits.parser) input
         |> transpose
         |> List.map Bits.mostCommonBit
 
@@ -27,7 +25,7 @@ part2 :: Text -> Int
 part2 input =
   Bits.multiply oxygenRate co2ScrubberRate
   where
-    bits = unsafeParse (lines Bits.parser) input
+    bits = P.unsafeParse (P.lines Bits.parser) input
     oxygenRate = bitsCriteria Bits.mostCommonBit 0 bits
     co2ScrubberRate = bitsCriteria (Bits.mostCommonBit >> Bits.reverseBit) 0 bits
 
