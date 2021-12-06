@@ -7,6 +7,7 @@ module Aoc.Counter
     count,
     add,
     total,
+    values,
   )
 where
 
@@ -36,7 +37,7 @@ add k new (Counter counter) =
     |> Counter
 
 total :: Counter a -> Int
-total (Counter counter) =
-  counter
-    |> Dict.values
-    |> List.sum
+total counter = List.sum (values counter)
+
+values :: Counter a -> List Int
+values (Counter counter) = Dict.values counter

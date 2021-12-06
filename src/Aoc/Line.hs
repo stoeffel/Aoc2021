@@ -7,9 +7,9 @@ module Aoc.Line
   )
 where
 
+import Aoc.Counter (Counter)
+import qualified Aoc.Counter as Counter
 import qualified Aoc.Parser as P
-import Dict (Dict)
-import qualified Dict
 import qualified List
 import Prelude (flip, otherwise, pure)
 
@@ -44,19 +44,11 @@ orientation Line {start, end}
   | y start == y end = Horizontal
   | otherwise = Diagonal
 
-intersections :: List Line -> Dict Point Int
+intersections :: List Line -> Counter Point
 intersections lines =
   lines
     |> List.concatMap lineToPoints
-    |> List.foldl
-      ( flip
-          Dict.update
-          ( \case
-              Just count -> Just (count + 1)
-              Nothing -> Just 1
-          )
-      )
-      Dict.empty
+    |> Counter.count
   where
     range :: Int -> Int -> List Int
     range x y = if x < y then [x .. y] else [y .. x]
