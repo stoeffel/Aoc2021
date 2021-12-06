@@ -1,31 +1,30 @@
-module Aoc.Day03 (Day03 (..)) where
+module Aoc.Day03 (solution) where
 
 import qualified Aoc.Bits as Bits
 import qualified Aoc.Parser as P
-import Aoc.Solution (Solution (..))
+import qualified Aoc.Solution as S
 import Data.List (transpose)
 
-data Day03 = Day03
+solution :: S.Solution
+solution = S.Solution {S.parser, S.solution1, S.solution2}
 
-instance Solution Day03 Int where
-  solution1 _ = part1
-  solution2 _ = part2
+parser :: P.Parser (List Bits.Bits)
+parser = P.lines Bits.parser
 
-part1 :: Text -> Int
-part1 input =
+solution1 :: List Bits.Bits -> Int
+solution1 bits =
   Bits.multiply gammaRate epsilonRate
   where
     epsilonRate = Bits.complement gammaRate
     gammaRate =
-      P.unsafeParse (P.lines Bits.parser) input
+      bits
         |> transpose
         |> List.map Bits.mostCommonBit
 
-part2 :: Text -> Int
-part2 input =
+solution2 :: List Bits.Bits -> Int
+solution2 bits =
   Bits.multiply oxygenRate co2ScrubberRate
   where
-    bits = P.unsafeParse (P.lines Bits.parser) input
     oxygenRate = bitsCriteria Bits.mostCommonBit 0 bits
     co2ScrubberRate = bitsCriteria (Bits.mostCommonBit >> Bits.reverseBit) 0 bits
 

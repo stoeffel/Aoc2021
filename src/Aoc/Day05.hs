@@ -1,25 +1,25 @@
-module Aoc.Day05 (Day05 (..)) where
+module Aoc.Day05 (solution) where
 
 import qualified Aoc.Counter as Counter
 import qualified Aoc.Line as Line
 import qualified Aoc.Parser as P
-import Aoc.Solution (Solution (..))
+import qualified Aoc.Solution as S
 
-data Day05 = Day05
+solution :: S.Solution
+solution = S.Solution {S.parser, S.solution1, S.solution2}
 
-instance Solution Day05 Int where
-  solution1 _ = part1
-  solution2 _ = part2
+parser :: P.Parser (List Line.Line)
+parser = P.lines Line.parser
 
-part1 :: Text -> Int
-part1 input =
-  P.unsafeParse (P.lines Line.parser) input
+solution1 :: List Line.Line -> Int
+solution1 lines =
+  lines
     |> List.filter (\line -> Line.orientation line /= Line.Diagonal)
     |> countIntersections
 
-part2 :: Text -> Int
-part2 input =
-  P.unsafeParse (P.lines Line.parser) input
+solution2 :: List Line.Line -> Int
+solution2 lines =
+  lines
     |> countIntersections
 
 countIntersections :: List Line.Line -> Int

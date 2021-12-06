@@ -1,22 +1,25 @@
-module Aoc.Day06 (Day06 (..)) where
+module Aoc.Day06 (solution) where
 
 import Aoc.Counter (Counter)
 import qualified Aoc.Counter as Counter
 import qualified Aoc.Parser as P
-import Aoc.Solution (Solution (..))
+import qualified Aoc.Solution as S
 
-data Day06 = Day06
-
-instance Solution Day06 Int where
-  solution1 _ = simulate 80
-  solution2 _ = simulate 256
+solution :: S.Solution
+solution = S.Solution {S.parser, S.solution1, S.solution2}
 
 newtype Age = Age Int
   deriving (Eq, Ord, Num)
 
-simulate :: Int -> Text -> Int
-simulate n input =
-  P.unsafeParse parser input
+solution1 :: List Age -> Int
+solution1 = simulate 80
+
+solution2 :: List Age -> Int
+solution2 = simulate 256
+
+simulate :: Int -> List Age -> Int
+simulate n ages =
+  ages
     |> Counter.count
     |> ageFishs n
     |> Counter.total

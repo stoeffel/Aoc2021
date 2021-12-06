@@ -1,10 +1,16 @@
-module Aoc.Day17 (Day17 (..)) where
+module Aoc.Day17 (solution) where
 
-import Aoc.Solution
-import qualified List
+import qualified Aoc.Parser as P
+import qualified Aoc.Solution as S
 
-data Day17 = Day17
+solution :: S.Solution
+solution = S.Solution {S.parser, S.solution1, S.solution2}
 
-instance Solution Day17 Text where
-  solution1 _ = identity
-  solution2 _ = identity
+parser :: P.Parser Text
+parser = map Text.fromList (P.many P.anyChar)
+
+solution1 :: Text -> Text
+solution1 _ = "TODO"
+
+solution2 :: Text -> Text
+solution2 _ = "TODO"

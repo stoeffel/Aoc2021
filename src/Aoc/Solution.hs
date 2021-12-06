@@ -1,11 +1,14 @@
-{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Aoc.Solution where
 
-import Data.Typeable (Typeable, typeOf)
+import qualified Aoc.Parser as P
 
-class (Typeable a, Show b) => Solution a b | a -> b where
-  solution1 :: a -> Text -> b
-  solution2 :: a -> Text -> b
-  name :: a -> Text
-  name x = Debug.toString (typeOf x)
+data Solution = forall a b.
+  Show b =>
+  Solution
+  { parser :: P.Parser a,
+    solution1 :: a -> b,
+    solution2 :: a -> b
+  }

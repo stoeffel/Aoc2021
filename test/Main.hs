@@ -25,6 +25,7 @@ import qualified Aoc.Day22
 import qualified Aoc.Day23
 import qualified Aoc.Day24
 import qualified Aoc.Day25
+import qualified Aoc.Parser as P
 import Aoc.Solution
 import qualified Data.Text.IO
 import qualified Expect
@@ -41,49 +42,49 @@ tests :: Test
 tests =
   describe
     "AoC21"
-    [ mkTests Aoc.Day01.Day01,
-      mkTests Aoc.Day02.Day02,
-      mkTests Aoc.Day03.Day03,
-      mkTests Aoc.Day04.Day04,
-      mkTests Aoc.Day05.Day05,
-      mkTests Aoc.Day06.Day06,
-      mkTests Aoc.Day07.Day07,
-      mkTests Aoc.Day08.Day08,
-      mkTests Aoc.Day09.Day09,
-      mkTests Aoc.Day10.Day10,
-      mkTests Aoc.Day11.Day11,
-      mkTests Aoc.Day12.Day12,
-      mkTests Aoc.Day13.Day13,
-      mkTests Aoc.Day14.Day14,
-      mkTests Aoc.Day15.Day15,
-      mkTests Aoc.Day16.Day16,
-      mkTests Aoc.Day17.Day17,
-      mkTests Aoc.Day18.Day18,
-      mkTests Aoc.Day19.Day19,
-      mkTests Aoc.Day20.Day20,
-      mkTests Aoc.Day21.Day21,
-      mkTests Aoc.Day22.Day22,
-      mkTests Aoc.Day23.Day23,
-      mkTests Aoc.Day24.Day24,
-      mkTests Aoc.Day25.Day25
+    [ mkTests Aoc.Day01.solution "Day01",
+      mkTests Aoc.Day02.solution "Day02",
+      mkTests Aoc.Day03.solution "Day03",
+      mkTests Aoc.Day04.solution "Day04",
+      mkTests Aoc.Day05.solution "Day05",
+      mkTests Aoc.Day06.solution "Day06",
+      mkTests Aoc.Day07.solution "Day07",
+      mkTests Aoc.Day08.solution "Day08",
+      mkTests Aoc.Day09.solution "Day09",
+      mkTests Aoc.Day10.solution "Day10",
+      mkTests Aoc.Day11.solution "Day11",
+      mkTests Aoc.Day12.solution "Day12",
+      mkTests Aoc.Day13.solution "Day13",
+      mkTests Aoc.Day14.solution "Day14",
+      mkTests Aoc.Day15.solution "Day15",
+      mkTests Aoc.Day16.solution "Day16",
+      mkTests Aoc.Day17.solution "Day17",
+      mkTests Aoc.Day18.solution "Day18",
+      mkTests Aoc.Day19.solution "Day19",
+      mkTests Aoc.Day20.solution "Day20",
+      mkTests Aoc.Day21.solution "Day21",
+      mkTests Aoc.Day22.solution "Day22",
+      mkTests Aoc.Day23.solution "Day23",
+      mkTests Aoc.Day24.solution "Day24",
+      mkTests Aoc.Day25.solution "Day25"
     ]
 
-mkTests :: (Solution a b) => a -> Test
-mkTests solution =
+mkTests :: Solution -> Text -> Test
+mkTests solution name =
   describe
-    (name solution)
-    [ mkTest solution Part1 Example,
-      mkTest solution Part1 Real,
-      mkTest solution Part2 Example,
-      mkTest solution Part2 Real
+    name
+    [ mkTest solution name Part1 Example,
+      mkTest solution name Part1 Real,
+      mkTest solution name Part2 Example,
+      mkTest solution name Part2 Real
     ]
 
 data Run = Example | Real
 
 data Part = Part1 | Part2
 
-mkTest :: Solution a b => a -> Part -> Run -> Test
-mkTest solution partX runX =
+mkTest :: Solution -> Text -> Part -> Run -> Test
+mkTest Solution {parser, solution1, solution2} name partX runX =
   test testName <| \() -> do
     let asset =
           Text.toList <| "test/assets/" ++ case runX of
@@ -96,14 +97,14 @@ mkTest solution partX runX =
     if exists
       then do
         input <- Expect.fromIO (Data.Text.IO.readFile asset)
-        run solution input
+        run (P.unsafeParse parser input)
           |> Debug.toString
           |> Expect.equalToContentsOf ("test/golden-results/" ++ testName ++ ".hs")
       else do
         Expect.fromIO (Data.Text.IO.writeFile asset "TODO")
         Expect.fail "No asset file found (created one)"
   where
-    solutionName = Text.toLower (name solution)
+    solutionName = Text.toLower name
     testName =
       solutionName
         ++ case partX of

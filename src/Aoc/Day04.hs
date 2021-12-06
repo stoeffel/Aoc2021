@@ -1,18 +1,15 @@
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveFunctor #-}
 
-module Aoc.Day04 (Day04 (..)) where
+module Aoc.Day04 (solution) where
 
 import Aoc.Parser as P
-import Aoc.Solution (Solution (..))
+import qualified Aoc.Solution as S
 import qualified Data.List
 import qualified Prelude
 
-data Day04 = Day04
-
-instance Solution Day04 (Maybe Int) where
-  solution1 _ = part1
-  solution2 _ = part2
+solution :: S.Solution
+solution = S.Solution {S.parser, S.solution1, S.solution2}
 
 data Game = Game
   { boards :: List (Board Cell),
@@ -34,8 +31,8 @@ data Marked
   | Unmarked
   deriving (Show, Eq)
 
-gameParser :: P.Parser Game
-gameParser = do
+parser :: P.Parser Game
+parser = do
   draws <- P.csv P.decimal
   _ <- P.endOfLine
   boards <- P.lines boardParser
@@ -51,18 +48,16 @@ cellParser =
   P.many (P.char ' ') *> P.decimal
     |> map (Cell Unmarked)
 
-part1 :: Text -> Maybe Int
-part1 input =
-  let Game {draws, boards} = P.unsafeParse gameParser input
-   in play boards draws
-        |> Maybe.map Tuple.first
-        |> Maybe.map calcResult
+solution1 :: Game -> Maybe Int
+solution1 Game {draws, boards} =
+  play boards draws
+    |> Maybe.map Tuple.first
+    |> Maybe.map calcResult
 
-part2 :: Text -> Maybe Int
-part2 input =
-  let Game {draws, boards} = P.unsafeParse gameParser input
-   in playUntilLast Nothing draws boards
-        |> Maybe.map calcResult
+solution2 :: Game -> Maybe Int
+solution2 Game {draws, boards} =
+  playUntilLast Nothing draws boards
+    |> Maybe.map calcResult
 
 data Winner = Winner
   { lastDraw :: Int,

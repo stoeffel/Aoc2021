@@ -1,24 +1,19 @@
-module Aoc.Day01 (Day01 (..)) where
+module Aoc.Day01 (solution) where
 
 import qualified Aoc.Parser as P
-import Aoc.Solution (Solution (..))
+import qualified Aoc.Solution as S
 
-data Day01 = Day01
+solution :: S.Solution
+solution = S.Solution {S.parser, S.solution1, S.solution2}
 
-instance Solution Day01 Int where
-  solution1 _ = part1
-  solution2 _ = part2
+parser :: P.Parser (List Int)
+parser = P.lines P.decimal
 
-part1 :: Text -> Int
-part1 input =
-  P.unsafeParse (P.lines P.decimal) input
-    |> countIncreased
+solution1 :: List Int -> Int
+solution1 = countIncreased
 
-part2 :: Text -> Int
-part2 input =
-  P.unsafeParse (P.lines P.decimal) input
-    |> slidingWindows
-    |> countIncreased
+solution2 :: List Int -> Int
+solution2 = slidingWindows >> countIncreased
 
 countIncreased :: List Int -> Int
 countIncreased lines =
