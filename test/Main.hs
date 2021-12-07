@@ -29,7 +29,6 @@ import qualified Aoc.Parser as P
 import Aoc.Solution
 import qualified Data.Text.IO
 import qualified Expect
-import qualified System.Directory as Directory
 import Test (Test, describe, test)
 import qualified Test
 import qualified Prelude
@@ -80,37 +79,36 @@ mkTests solution name =
     ]
 
 data Run = Example | Real
+  deriving (Show)
 
 data Part = Part1 | Part2
+  deriving (Show)
 
 mkTest :: Solution -> Text -> Part -> Run -> Test
-mkTest Solution {parser, solution1, solution2} name partX runX =
-  test testName <| \() -> do
-    let asset =
-          Text.toList <| "test/assets/" ++ case runX of
-            Real -> solutionName ++ ".txt"
-            Example -> solutionName ++ "-example.txt"
-    let run = case partX of
-          Part1 -> solution1
-          Part2 -> solution2
-    exists <- Expect.fromIO (Directory.doesFileExist asset)
-    if exists
-      then do
-        input <- Expect.fromIO (Data.Text.IO.readFile asset)
-        parsed <- Expect.fromResult (P.parse parser input)
-        run parsed
-          |> Debug.toString
-          |> Expect.equalToContentsOf ("test/golden-results/" ++ testName ++ ".hs")
-      else do
-        Expect.fromIO (Data.Text.IO.writeFile asset "TODO")
-        Expect.fail "No asset file found (created one)"
-  where
-    solutionName = Text.toLower name
-    testName =
-      solutionName
-        ++ case partX of
-          Part1 -> "-part1"
-          Part2 -> "-part2"
-        ++ case runX of
-          Example -> "-example"
-          Real -> ""
+mkTest solution name part run =
+  test (Debug.toString part ++ " " ++ Debug.toString run)
+    <| \() -> mkExpectation solution name part run
+
+mkExpectation :: Solution -> Text -> Part -> Run -> Expect.Expectation
+mkExpectation Solution {parser, solution1, solution2} name part run = do
+  let solutionName = Text.toLower name
+  let asset =
+        Text.toList <| "test/assets/" ++ case run of
+          Real -> solutionName ++ ".txt"
+          Example -> solutionName ++ "-example.txt"
+  let golden =
+        solutionName
+          ++ case part of
+            Part1 -> "-part1"
+            Part2 -> "-part2"
+          ++ case run of
+            Example -> "-example"
+            Real -> ""
+  let run = case part of
+        Part1 -> solution1
+        Part2 -> solution2
+  input <- Expect.fromIO (Data.Text.IO.readFile asset)
+  parsed <- Expect.fromResult (P.parse parser input)
+  run parsed
+    |> Debug.toString
+    |> Expect.equalToContentsOf ("test/golden-results/" ++ golden ++ ".hs")
