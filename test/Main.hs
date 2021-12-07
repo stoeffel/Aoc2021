@@ -97,7 +97,8 @@ mkTest Solution {parser, solution1, solution2} name partX runX =
     if exists
       then do
         input <- Expect.fromIO (Data.Text.IO.readFile asset)
-        run (P.unsafeParse parser input)
+        parsed <- Expect.fromResult (P.parse parser input)
+        run parsed
           |> Debug.toString
           |> Expect.equalToContentsOf ("test/golden-results/" ++ testName ++ ".hs")
       else do

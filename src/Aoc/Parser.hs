@@ -1,5 +1,5 @@
 module Aoc.Parser
-  ( unsafeParse,
+  ( parse,
     lines,
     keywords,
     oneOf,
@@ -10,18 +10,18 @@ module Aoc.Parser
 where
 
 import Control.Applicative (many, (*>), (<*))
-import Data.Attoparsec.Text
+import Data.Attoparsec.Text hiding (Result, parse)
 import Data.Foldable (asum)
 import Prelude (Either (Left, Right), pure)
 
 oneOf :: List (Parser a) -> Parser a
 oneOf = asum
 
-unsafeParse :: Parser a -> Text -> a
-unsafeParse parser input =
+parse :: Parser a -> Text -> Result Text a
+parse parser input =
   case parseOnly parser input of
-    Left _ -> Debug.todo "Failed to parse input"
-    Right result -> result
+    Left err -> Err (Text.fromList err)
+    Right result -> Ok result
 
 lines :: Parser a -> Parser (List a)
 lines p = many (p <* endOfLine)
