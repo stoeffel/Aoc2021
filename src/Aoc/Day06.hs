@@ -20,7 +20,7 @@ solution2 = simulate 256
 simulate :: Int -> List Age -> Int
 simulate n ages =
   ages
-    |> Counter.count
+    |> Counter.fromList
     |> ageFishs n
     |> Counter.total
 

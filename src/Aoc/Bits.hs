@@ -31,7 +31,7 @@ parser = P.many1 bitParser
 
 mostCommonBit :: Bits -> Bit
 mostCommonBit xs =
-  Counter.count xs
+  Counter.fromList xs
     |> Counter.max
     |> Maybe.map Tuple.first
     |> Maybe.withDefault One

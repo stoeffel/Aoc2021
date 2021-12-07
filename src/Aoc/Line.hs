@@ -47,7 +47,7 @@ intersections :: List Line -> Counter Point
 intersections lines =
   lines
     |> List.concatMap lineToPoints
-    |> Counter.count
+    |> Counter.fromList
   where
     range :: Int -> Int -> List Int
     range x y = if x < y then [x .. y] else [y .. x]

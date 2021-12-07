@@ -35,7 +35,7 @@ solution2 :: List Int -> Maybe Int
 solution2 positions =
   Maybe.map2 List.range (List.minimum positions) (List.maximum positions)
     |> Maybe.withDefault []
-    |> List.map (calcRealFuel (Counter.count positions))
+    |> List.map (calcRealFuel (Counter.fromList positions))
     |> List.minimum
 
 calcRealFuel :: Counter.Counter Int -> Int -> Int

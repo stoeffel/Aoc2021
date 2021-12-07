@@ -2,7 +2,7 @@ module Aoc.Counter
   ( Counter,
     empty,
     foldl,
-    count,
+    fromList,
     add,
     total,
     toList,
@@ -23,8 +23,8 @@ empty = Counter Dict.empty
 foldl :: (a -> Int -> b -> b) -> b -> Counter a -> b
 foldl f acc (Counter counter) = Dict.foldl f acc counter
 
-count :: Ord a => List a -> Counter a
-count = List.foldl (\item -> add item 1) empty
+fromList :: Ord a => List a -> Counter a
+fromList = List.foldl (\item -> add item 1) empty
 
 add :: Ord a => a -> Int -> Counter a -> Counter a
 add k new (Counter counter) =
