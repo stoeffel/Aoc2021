@@ -91,24 +91,19 @@ mkTest solution name part run =
 
 mkExpectation :: Solution -> Text -> Part -> Run -> Expect.Expectation
 mkExpectation Solution {parser, solution1, solution2} name part run = do
-  let solutionName = Text.toLower name
-  let asset =
-        Text.toList <| "test/assets/" ++ case run of
-          Real -> solutionName ++ ".txt"
-          Example -> solutionName ++ "-example.txt"
-  let golden =
-        solutionName
-          ++ case part of
-            Part1 -> "-part1"
-            Part2 -> "-part2"
-          ++ case run of
-            Example -> "-example"
-            Real -> ""
-  let run = case part of
-        Part1 -> solution1
-        Part2 -> solution2
-  input <- Expect.fromIO (Data.Text.IO.readFile asset)
+  let asset = case run of
+        Real -> name
+        Example -> name ++ "-example"
+  let golden = Text.toLower (asset ++ "-" ++ Debug.toString part)
+  input <-
+    "test/assets/" ++ asset ++ ".txt"
+      |> Text.toLower
+      |> Text.toList
+      |> Data.Text.IO.readFile
+      |> Expect.fromIO
   parsed <- Expect.fromResult (P.parse parser input)
-  run parsed
+  case part of
+    Part1 -> solution1 parsed
+    Part2 -> solution2 parsed
     |> Debug.toString
     |> Expect.equalToContentsOf ("test/golden-results/" ++ golden ++ ".hs")
