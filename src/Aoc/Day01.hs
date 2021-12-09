@@ -17,14 +17,20 @@ solution2 = slidingWindows >> countIncreased
 
 countIncreased :: List Int -> Int
 countIncreased lines =
-  List.map2 (,) lines (List.drop 1 lines)
+  lines
     |> List.foldl
-      ( \(a, b) acc ->
-          if a < b
-            then acc + 1
-            else acc
+      ( \curr (maybeLast, acc) ->
+          ( Just curr,
+            case maybeLast of
+              Nothing -> acc
+              Just last ->
+                if last < curr
+                  then acc + 1
+                  else acc
+          )
       )
-      0
+      (Nothing, 0)
+    |> Tuple.second
 
 slidingWindows :: List Int -> List Int
 slidingWindows lines =

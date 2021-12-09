@@ -14,6 +14,7 @@ import qualified Data.List
 import Dict (Dict)
 import qualified Dict
 import NriPrelude hiding (max)
+import Prelude (flip)
 
 newtype Counter a = Counter (Dict a Int)
 
@@ -24,7 +25,7 @@ foldl :: (a -> Int -> b -> b) -> b -> Counter a -> b
 foldl f acc (Counter counter) = Dict.foldl f acc counter
 
 fromList :: Ord a => List a -> Counter a
-fromList = List.foldl (\item -> add item 1) empty
+fromList = List.foldl (flip add 1) empty
 
 add :: Ord a => a -> Int -> Counter a -> Counter a
 add k new (Counter counter) =

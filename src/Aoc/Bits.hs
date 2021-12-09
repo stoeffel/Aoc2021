@@ -31,25 +31,22 @@ parser = P.many1 bitParser
 
 mostCommonBit :: Bits -> Bit
 mostCommonBit xs =
-  Counter.fromList xs
-    |> Counter.max
-    |> Maybe.map Tuple.first
-    |> Maybe.withDefault One
+  case Counter.max (Counter.fromList xs) of
+    Just (x, _) -> x
+    Nothing -> One
 
 complement :: Bits -> Bits
 complement = List.map reverseBit
 
 reverseBit :: Bit -> Bit
-reverseBit =
-  \case
-    One -> Zero
-    Zero -> One
+reverseBit = \case
+  One -> Zero
+  Zero -> One
 
 bitToInt :: Bit -> Int
-bitToInt =
-  \case
-    One -> 1
-    Zero -> 0
+bitToInt = \case
+  One -> 1
+  Zero -> 0
 
 toInt :: Bits -> Int
 toInt = List.foldl (\x acc -> Bits.shiftL acc 1 + bitToInt x) 0

@@ -17,8 +17,7 @@ solution1 bits =
   where
     epsilonRate = Bits.complement gammaRate
     gammaRate =
-      bits
-        |> transpose
+      transpose bits
         |> List.map Bits.mostCommonBit
 
 solution2 :: List Bits.Bits -> Int

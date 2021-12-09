@@ -18,9 +18,7 @@ solution1 lines =
     |> countIntersections
 
 solution2 :: List Line.Line -> Int
-solution2 lines =
-  lines
-    |> countIntersections
+solution2 lines = countIntersections lines
 
 countIntersections :: List Line.Line -> Int
 countIntersections lines =
