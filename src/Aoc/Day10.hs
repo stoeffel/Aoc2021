@@ -34,8 +34,7 @@ bracketParser =
 solution1 :: List (List (OpenClose Bracket)) -> Maybe Int
 solution1 input =
   List.map (syntaxCheck Stack.empty) input
-    |> List.map syntaxErrorScore
-    |> List.sum
+    |> List.foldl (\result acc -> acc + syntaxErrorScore result) 0
     |> Just
 
 solution2 :: List (List (OpenClose Bracket)) -> Maybe Int
