@@ -102,8 +102,8 @@ mkExpectation Solution {parser, solution1, solution2} name part run = do
       |> Data.Text.IO.readFile
       |> Expect.fromIO
   parsed <- Expect.fromResult (P.parse parser input)
-  case part of
-    Part1 -> solution1 parsed
-    Part2 -> solution2 parsed
-    |> Debug.toString
+  let result = case part of
+        Part1 -> solution1 parsed
+        Part2 -> solution2 parsed
+  Debug.toString result
     |> Expect.equalToContentsOf ("test/golden-results/" ++ golden ++ ".hs")
