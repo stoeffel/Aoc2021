@@ -12,10 +12,10 @@ solution = S.Solution {S.parser, S.solution1, S.solution2}
 data Coord = Coord {x :: Int, y :: Int}
   deriving (Show, Eq, Ord)
 
-data Flash = Flash {energy :: Int, flashed :: Int, justFlashed :: Bool}
+data Octopus = Octopus {energy :: Int, flashed :: Int, justFlashed :: Bool}
   deriving (Show, Eq)
 
-parser :: P.Parser (Dict Coord Flash)
+parser :: P.Parser (Dict Coord Octopus)
 parser = do
   points <- P.lines (P.many1 P.digitInt)
   points
@@ -24,7 +24,7 @@ parser = do
           List.indexedMap
             ( \y energy ->
                 ( Coord {x, y},
-                  Flash {energy, flashed = 0, justFlashed = False}
+                  Octopus {energy, flashed = 0, justFlashed = False}
                 )
             )
       )
@@ -32,16 +32,16 @@ parser = do
     |> Dict.fromList
     |> pure
 
-solution1 :: Dict Coord Flash -> Int
+solution1 :: Dict Coord Octopus -> Int
 solution1 octopuses =
   octopuses
     |> step 100
-    |> Dict.foldl (\_ Flash {flashed} acc -> flashed + acc) 0
+    |> Dict.foldl (\_ Octopus {flashed} acc -> flashed + acc) 0
 
-solution2 :: Dict Coord Flash -> Int
+solution2 :: Dict Coord Octopus -> Int
 solution2 octopuses = synchronized 0 octopuses
 
-step :: Int -> Dict Coord Flash -> Dict Coord Flash
+step :: Int -> Dict Coord Octopus -> Dict Coord Octopus
 step 0 octopuses = octopuses
 step n octopuses =
   octopuses
@@ -50,7 +50,7 @@ step n octopuses =
     |> Dict.map (\_ -> goDark)
     |> step (n - 1)
 
-synchronized :: Int -> Dict Coord Flash -> Int
+synchronized :: Int -> Dict Coord Octopus -> Int
 synchronized x octopuses =
   let newOctopuses =
         octopuses
@@ -63,13 +63,13 @@ synchronized x octopuses =
             |> Dict.map (\_ -> goDark)
             |> synchronized (x + 1)
 
-flashOctopuses :: Dict Coord Flash -> Dict Coord Flash
+flashOctopuses :: Dict Coord Octopus -> Dict Coord Octopus
 flashOctopuses octopuses =
-  if List.all (\Flash {energy} -> energy <= 9) (Dict.values octopuses)
+  if List.all (\Octopus {energy} -> energy <= 9) (Dict.values octopuses)
     then octopuses
     else
       Dict.foldl
-        ( \coord Flash {energy, justFlashed} acc ->
+        ( \coord Octopus {energy, justFlashed} acc ->
             if energy <= 9
               then acc
               else
@@ -83,10 +83,10 @@ flashOctopuses octopuses =
         octopuses
         |> flashOctopuses
 
-incEnergy :: Flash -> Flash
+incEnergy :: Octopus -> Octopus
 incEnergy f = f {energy = energy f + 1}
 
-flash :: Flash -> Flash
+flash :: Octopus -> Octopus
 flash f =
   f
     { energy = 0,
@@ -94,7 +94,7 @@ flash f =
       justFlashed = True
     }
 
-goDark :: Flash -> Flash
+goDark :: Octopus -> Octopus
 goDark f =
   if justFlashed f
     then f {justFlashed = False, energy = 0}
