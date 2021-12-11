@@ -10,6 +10,7 @@ import qualified Aoc.Day07
 import qualified Aoc.Day08
 import qualified Aoc.Day09
 import qualified Aoc.Day10
+import qualified Aoc.Day10Parser
 import qualified Aoc.Day11
 import qualified Aoc.Day12
 import qualified Aoc.Day13
@@ -51,6 +52,7 @@ tests =
       mkTests Aoc.Day08.solution "Day08",
       mkTests Aoc.Day09.solution "Day09",
       mkTests Aoc.Day10.solution "Day10",
+      mkTests Aoc.Day10Parser.solution "Day10Parser",
       mkTests Aoc.Day11.solution "Day11",
       mkTests Aoc.Day12.solution "Day12",
       mkTests Aoc.Day13.solution "Day13",
