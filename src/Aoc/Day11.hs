@@ -4,7 +4,7 @@ import Aoc.Grid (Grid)
 import qualified Aoc.Grid as Grid
 import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
-import Prelude (pure)
+import Prelude (flip, pure)
 
 solution :: S.Solution
 solution = S.Solution {S.parser, S.solution1, S.solution2}
@@ -27,7 +27,8 @@ solution1 :: Grid Octopus -> Int
 solution1 octopuses =
   octopuses
     |> step 100
-    |> Grid.foldl (\acc Octopus {flashed} -> flashed + acc) 0
+    |> Grid.map flashed
+    |> Grid.sum
 
 solution2 :: Grid Octopus -> Int
 solution2 octopuses = synchronized 0 octopuses
@@ -65,7 +66,7 @@ flashOctopuses octopuses =
               then acc
               else
                 List.foldl
-                  (\x -> Grid.update x incEnergy)
+                  (flip Grid.update incEnergy)
                   acc
                   (Grid.surrounding coord)
                   |> Grid.update coord flash

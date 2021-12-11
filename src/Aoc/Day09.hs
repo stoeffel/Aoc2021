@@ -35,9 +35,9 @@ solution2 input =
 
 findLowPoints :: Grid Int -> Coord -> Int -> List (Coord, Int) -> List (Coord, Int)
 findLowPoints all coord v acc =
-  case Grid.get coord all of
-    Just cell | isLowPoint cell -> (coord, cell) : acc
-    _ -> acc
+  if isLowPoint v
+    then (coord, v) : acc
+    else acc
   where
     isLowPoint :: Int -> Bool
     isLowPoint cell =
