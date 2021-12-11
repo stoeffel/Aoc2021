@@ -6,7 +6,7 @@ import qualified Aoc.Solution as S
 import Control.Applicative (optional)
 import qualified Data.Foldable as F
 import Data.Traversable (traverse)
-import Data.Tree (Tree (Node))
+import Data.Tree (Forest, Tree (Node))
 import Prelude (Foldable, Functor, Traversable, otherwise, pure)
 
 solution :: S.Solution
@@ -21,7 +21,7 @@ data Chunk
   | Incomplete Bracket
   deriving (Eq, Show)
 
-parser :: P.Parser (List (Tree Chunk))
+parser :: P.Parser (Forest Chunk)
 parser = P.lines treeParser
 
 treeParser :: P.Parser (Tree Chunk)
@@ -58,7 +58,7 @@ closeBracketParser =
       (">", Angle)
     ]
 
-solution1 :: List (Tree Chunk) -> Maybe Int
+solution1 :: Forest Chunk -> Maybe Int
 solution1 forest =
   List.concatMap F.toList forest
     |> List.filterMap corrupted
@@ -66,7 +66,7 @@ solution1 forest =
     |> List.sum
     |> Just
 
-solution2 :: List (Tree Chunk) -> Maybe Int
+solution2 :: Forest Chunk -> Maybe Int
 solution2 forest =
   List.map F.toList forest
     |> List.filterMap incompleteLines
