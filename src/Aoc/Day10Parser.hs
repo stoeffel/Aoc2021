@@ -3,8 +3,6 @@ module Aoc.Day10Parser (solution) where
 import Aoc.Parser ((<*))
 import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
-import Aoc.Stack (Stack)
-import qualified Aoc.Stack as Stack
 import Control.Applicative (optional)
 import qualified Data.Foldable as F
 import Data.Traversable (traverse)
