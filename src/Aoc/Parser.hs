@@ -10,7 +10,7 @@ module Aoc.Parser
   )
 where
 
-import Control.Applicative (many, (*>), (<*))
+import Control.Applicative (many, optional, (*>), (<*))
 import Data.Attoparsec.Text hiding (Result, parse)
 import qualified Data.Char
 import Data.Foldable (asum)
@@ -26,7 +26,7 @@ parse parser input =
     Right result -> Ok result
 
 lines :: Parser a -> Parser (List a)
-lines p = many (p <* endOfLine)
+lines p = many (p <* optional endOfLine)
 
 keywords :: List (Text, a) -> Parser a
 keywords =

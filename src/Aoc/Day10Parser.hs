@@ -5,7 +5,7 @@ import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
 import Aoc.Stack (Stack)
 import qualified Aoc.Stack as Stack
-import Control.Applicative (optional, (<|>))
+import Control.Applicative (optional)
 import qualified Data.Foldable as F
 import Data.Traversable (traverse)
 import Data.Tree (Tree (Node))
@@ -24,7 +24,7 @@ data Chunk
   deriving (Eq, Show)
 
 parser :: P.Parser (List (Tree Chunk))
-parser = P.many1 (treeParser <* optional P.endOfLine)
+parser = P.lines treeParser
 
 treeParser :: P.Parser (Tree Chunk)
 treeParser = do
