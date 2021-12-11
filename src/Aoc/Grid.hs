@@ -7,8 +7,10 @@ module Aoc.Grid
     fromLists,
     foldWithKey,
     map,
+    coords,
     get,
     update,
+    filter,
     module Data.Foldable,
     surrounding,
     neightbours,
@@ -45,11 +47,17 @@ foldWithKey f z (Grid d) = Dict.foldl f z d
 map :: (a -> b) -> Grid a -> Grid b
 map = fmap
 
+coords :: Grid a -> List Coord
+coords = foldWithKey (\c _ -> (:) c) []
+
 get :: Coord -> Grid a -> Maybe a
 get c (Grid d) = Dict.get c d
 
 update :: Coord -> (a -> a) -> Grid a -> Grid a
 update c f (Grid d) = Grid (Dict.update c (Maybe.map f) d)
+
+filter :: (Coord -> a -> Bool) -> Grid a -> Grid a
+filter f (Grid d) = Grid (Dict.filter f d)
 
 surrounding :: Coord -> List Coord
 surrounding coord@Coord {x, y} =

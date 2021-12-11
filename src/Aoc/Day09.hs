@@ -21,29 +21,24 @@ parser = do
 solution1 :: Grid Int -> Int
 solution1 input =
   input
-    |> Grid.foldWithKey (findLowPoints input) []
-    |> List.foldl (\(_, x) acc -> x + 1 + acc) 0
+    |> Grid.filter (isLowPoint input)
+    |> Grid.foldl (\x acc -> x + 1 + acc) 0
 
 solution2 :: Grid Int -> Int
 solution2 input =
   input
-    |> Grid.foldWithKey (findLowPoints input) []
-    |> List.map (Tuple.first >> findBasins input Set.empty >> Set.size)
+    |> Grid.filter (isLowPoint input)
+    |> Grid.coords
+    |> List.map (findBasins input Set.empty >> Set.size)
     |> List.sortWith desc
     |> List.take 3
     |> List.foldl (*) 1
 
-findLowPoints :: Grid Int -> Coord -> Int -> List (Coord, Int) -> List (Coord, Int)
-findLowPoints all coord v acc =
-  if isLowPoint v
-    then (coord, v) : acc
-    else acc
-  where
-    isLowPoint :: Int -> Bool
-    isLowPoint cell =
-      Grid.neightbours coord
-        |> List.filterMap (flip Grid.get all)
-        |> List.all (> cell)
+isLowPoint :: Grid Int -> Coord -> Int -> Bool
+isLowPoint all coord cell =
+  Grid.neightbours coord
+    |> List.filterMap (flip Grid.get all)
+    |> List.all (> cell)
 
 findBasins :: Grid Int -> Set Coord -> Coord -> Set Coord
 findBasins all acc coord
