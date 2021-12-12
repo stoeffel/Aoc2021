@@ -7,6 +7,8 @@ module Aoc.Counter
     total,
     toList,
     max,
+    all,
+    get,
   )
 where
 
@@ -26,6 +28,14 @@ foldl f acc (Counter counter) = Dict.foldl f acc counter
 
 fromList :: Ord a => List a -> Counter a
 fromList = List.foldl (flip add 1) empty
+
+all :: (Int -> Bool) -> Counter a -> Bool
+all p (Counter counter) =
+  Dict.filter (\_ -> not << p) counter
+    |> Dict.isEmpty
+
+get :: Ord a => a -> Counter a -> Maybe Int
+get k (Counter counter) = Dict.get k counter
 
 add :: Ord a => a -> Int -> Counter a -> Counter a
 add k new (Counter counter) =

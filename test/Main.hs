@@ -54,7 +54,7 @@ tests =
       mkTests Aoc.Day10.solution "Day10",
       mkTests Aoc.Day10Parser.solution "Day10Parser",
       mkTests Aoc.Day11.solution "Day11",
-      mkTests Aoc.Day12.solution "Day12",
+      Test.skip <| mkTests Aoc.Day12.solution "Day12",
       mkTests Aoc.Day13.solution "Day13",
       mkTests Aoc.Day14.solution "Day14",
       mkTests Aoc.Day15.solution "Day15",
