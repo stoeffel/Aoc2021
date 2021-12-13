@@ -79,7 +79,9 @@ pathLogic source visited guard edges = do
     then pure ()
     else do
       when (name next == "start") A.empty
-      _ <- guard next visited
+      _ <- case size next of
+        Big -> pure ()
+        Small -> guard next visited
       pathLogic next (Counter.add next 1 visited) guard edges
 
 adjacentLogic :: Eq a => a -> List (Edge a) -> L.Logic a
@@ -94,26 +96,20 @@ adjacentLogic source edges = do
 
 smallOnlyOnce :: Cave -> Counter Cave -> L.Logic ()
 smallOnlyOnce cave visited =
-  case size cave of
-    Big -> pure ()
-    Small ->
-      if Counter.member cave visited
-        then A.empty
-        else pure ()
+  if Counter.member cave visited
+    then A.empty
+    else pure ()
 
 oneSmallTwice :: Cave -> Counter Cave -> L.Logic ()
 oneSmallTwice cave visited =
-  case size cave of
-    Big -> pure ()
-    Small ->
-      case Counter.member cave visited of
-        False -> pure ()
-        True ->
-          if Counter.any
-            (\Cave {size} v -> size == Small && v > 1)
-            visited
-            then A.empty
-            else pure ()
+  case Counter.member cave visited of
+    False -> pure ()
+    True ->
+      if Counter.any
+        (\Cave {size} v -> size == Small && v > 1)
+        visited
+        then A.empty
+        else pure ()
 
 choose :: List a -> L.Logic a
 choose = foldr ((<|>) << pure) A.empty

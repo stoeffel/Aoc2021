@@ -8,7 +8,7 @@ import Aoc.Parser ((<*))
 import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
 import qualified Control.Concurrent
-import Control.Monad (foldM, void)
+import Control.Monad (foldM_)
 import System.Console.ANSI (clearScreen)
 import Prelude (IO, pure, putStrLn, uncurry)
 
@@ -88,15 +88,16 @@ dotToText = \case
   Just Dot -> "█"
 
 visualize :: (Grid Dot, Fold, List Fold) -> IO ()
-visualize (grid, fold, folds) = do
-  void
-    <| foldM
-      ( \acc fold -> do
-          clearScreen
-          let next = foldGrid fold acc
-          putStrLn (Text.toList (Grid.toText dotToText next))
-          Control.Concurrent.threadDelay 100000
-          pure next
-      )
-      grid
-      (fold : folds)
+visualize (grid, fold, folds) =
+  foldM_
+    ( \acc fold -> do
+        clearScreen
+        let next = foldGrid fold acc
+        Grid.toText dotToText next
+          |> Text.toList
+          |> putStrLn
+        Control.Concurrent.threadDelay 100000
+        pure next
+    )
+    grid
+    (fold : folds)
