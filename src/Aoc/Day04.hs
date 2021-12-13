@@ -9,7 +9,7 @@ import qualified Data.List
 import qualified Prelude
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2}
+solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
 
 data Game = Game
   { boards :: List (Board Cell),

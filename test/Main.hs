@@ -54,7 +54,7 @@ tests =
       mkTests Aoc.Day10.solution "Day10",
       mkTests Aoc.Day10Parser.solution "Day10Parser",
       mkTests Aoc.Day11.solution "Day11",
-      Test.skip <| mkTests Aoc.Day12.solution "Day12",
+      mkTests Aoc.Day12.solution "Day12",
       mkTests Aoc.Day13.solution "Day13",
       mkTests Aoc.Day14.solution "Day14",
       mkTests Aoc.Day15.solution "Day15",
@@ -92,7 +92,7 @@ mkTest solution name part run =
     <| \() -> mkExpectation solution name part run
 
 mkExpectation :: Solution -> Text -> Part -> Run -> Expect.Expectation
-mkExpectation Solution {parser, solution1, solution2} name part run = do
+mkExpectation Solution {parser, solution1, solution2, display} name part run = do
   let asset = case run of
         Real -> name
         Example -> name ++ "-example"
@@ -107,5 +107,5 @@ mkExpectation Solution {parser, solution1, solution2} name part run = do
   let result = case part of
         Part1 -> solution1 parsed
         Part2 -> solution2 parsed
-  Debug.toString result
+  display result
     |> Expect.equalToContentsOf ("test/golden-results/" ++ golden ++ ".hs")

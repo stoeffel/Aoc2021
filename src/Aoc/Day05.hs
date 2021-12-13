@@ -6,7 +6,7 @@ import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2}
+solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
 
 parser :: P.Parser (List Line.Line)
 parser = P.lines Line.parser

@@ -7,7 +7,7 @@ import qualified Aoc.Solution as S
 import Prelude (flip, pure)
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2}
+solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
 
 data Octopus = Octopus {energy :: Int, flashed :: Int, justFlashed :: Bool}
   deriving (Show, Eq)

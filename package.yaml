@@ -50,6 +50,7 @@ library:
   - logict >= 0.7.1.0 && < 0.8
   exposed-modules:
   - Aoc.Day1
+  - Aoc.Grid
   source-dirs: src
 tests:
   spec:

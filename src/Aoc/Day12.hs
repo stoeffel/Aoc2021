@@ -14,7 +14,7 @@ run2 :: List (Edge Cave) -> Int
 run2 = solution2
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2}
+solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
 
 parser :: P.Parser (List (Edge Cave))
 parser = P.lines (edgeParser caveParser)

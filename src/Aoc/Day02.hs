@@ -8,7 +8,7 @@ import Data.Default (Default, def)
 import Prelude (pure)
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2}
+solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
 
 data Command = Command {direction :: Direction, value :: Int}
   deriving (Show)
