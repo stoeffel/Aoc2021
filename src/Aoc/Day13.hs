@@ -75,14 +75,9 @@ foldGrid Fold {orientation, value} grid =
     |> uncurry Grid.union
 
 splitGrid :: Int -> Orientation -> Grid a -> (Grid a, Grid a)
-splitGrid target orientation g =
-  let fromCoord Coord {x, y} =
-        case orientation of
-          Vertical -> x
-          Horizontal -> y
-   in Grid.partition (\c _ -> fromCoord c <= target) g
-        |> Tuple.mapFirst
-          (Grid.filter (\c _ -> fromCoord c /= target))
+splitGrid target o g =
+  Grid.partition (\c _ -> coordFromOrientation c o <= target) g
+    |> Tuple.mapFirst (Grid.filter (\c _ -> coordFromOrientation c o /= target))
 
 flipGrid :: Orientation -> Grid a -> Grid a
 flipGrid orientation g =
@@ -92,6 +87,11 @@ flipGrid orientation g =
         Vertical -> c {x = flip (Grid.maxX g) (x c)}
     )
     g
+
+coordFromOrientation :: Coord -> Orientation -> Int
+coordFromOrientation Coord {x, y} = \case
+  Vertical -> x
+  Horizontal -> y
 
 flip :: Int -> Int -> Int
 flip maxX x =

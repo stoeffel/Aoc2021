@@ -7,8 +7,9 @@ module Aoc.Counter
     total,
     toList,
     max,
-    all,
+    any,
     get,
+    member,
   )
 where
 
@@ -29,10 +30,16 @@ foldl f acc (Counter counter) = Dict.foldl f acc counter
 fromList :: Ord a => List a -> Counter a
 fromList = List.foldl (flip add 1) empty
 
-all :: (Int -> Bool) -> Counter a -> Bool
-all p (Counter counter) =
-  Dict.filter (\_ -> not << p) counter
-    |> Dict.isEmpty
+any :: (a -> Int -> Bool) -> Counter a -> Bool
+any p (Counter counter) =
+  Dict.foldl
+    ( \k v acc ->
+        if acc
+          then True
+          else p k v
+    )
+    False
+    counter
 
 get :: Ord a => a -> Counter a -> Maybe Int
 get k (Counter counter) = Dict.get k counter
@@ -61,3 +68,6 @@ max counter =
     xs ->
       Data.List.maximumBy (\(_, a) (_, b) -> compare a b) xs
         |> Just
+
+member :: Ord a => a -> Counter a -> Bool
+member k (Counter counter) = Dict.member k counter

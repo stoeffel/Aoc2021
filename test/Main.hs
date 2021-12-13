@@ -36,12 +36,12 @@ import qualified Prelude
 
 main :: Prelude.IO ()
 main = do
-  Test.run tests
+  tests <- buildTests
+  Test.run (describe "AOC 2021" tests)
 
-tests :: Test
-tests =
-  describe
-    "AoC21"
+buildTests :: Prelude.IO (List Test)
+buildTests =
+  Prelude.sequence
     [ mkTests Aoc.Day01.solution "Day01",
       mkTests Aoc.Day02.solution "Day02",
       mkTests Aoc.Day03.solution "Day03",
@@ -70,15 +70,16 @@ tests =
       mkTests Aoc.Day25.solution "Day25"
     ]
 
-mkTests :: Solution -> Text -> Test
-mkTests solution name =
-  describe
-    name
-    [ mkTest solution name Part1 Example,
-      mkTest solution name Part1 Real,
-      mkTest solution name Part2 Example,
-      mkTest solution name Part2 Real
-    ]
+mkTests :: Solution -> Text -> Prelude.IO Test
+mkTests solution name = do
+  tests <-
+    Prelude.sequence
+      [ mkTest solution name Part1 Example,
+        mkTest solution name Part1 Real,
+        mkTest solution name Part2 Example,
+        mkTest solution name Part2 Real
+      ]
+  Prelude.pure (describe name tests)
 
 data Run = Example | Real
   deriving (Show)
@@ -86,26 +87,30 @@ data Run = Example | Real
 data Part = Part1 | Part2
   deriving (Show)
 
-mkTest :: Solution -> Text -> Part -> Run -> Test
-mkTest solution name part run =
-  test (Debug.toString part ++ " " ++ Debug.toString run)
-    <| \() -> mkExpectation solution name part run
-
-mkExpectation :: Solution -> Text -> Part -> Run -> Expect.Expectation
-mkExpectation Solution {parser, solution1, solution2, display} name part run = do
+mkTest :: Solution -> Text -> Part -> Run -> Prelude.IO Test
+mkTest Solution {parser, display, solution1, solution2} name part run = do
   let asset = case run of
         Real -> name
         Example -> name ++ "-example"
+  input <-
+    "test/assets/" ++ asset ++ ".txt"
+      |> Text.toLower
+      |> Text.toList
+      |> Data.Text.IO.readFile
   let golden = Text.toLower (asset ++ "-" ++ Debug.toString part)
   input <-
     "test/assets/" ++ asset ++ ".txt"
       |> Text.toLower
       |> Text.toList
       |> Data.Text.IO.readFile
-      |> Expect.fromIO
-  parsed <- Expect.fromResult (P.parse parser input)
+  let parsed = P.parse parser input
   let result = case part of
-        Part1 -> solution1 parsed
-        Part2 -> solution2 parsed
-  display result
-    |> Expect.equalToContentsOf ("test/golden-results/" ++ golden ++ ".hs")
+        Part1 -> Result.map solution1 parsed
+        Part2 -> Result.map solution2 parsed
+  Prelude.pure <| test (Debug.toString part ++ " " ++ Debug.toString run)
+    <| \() -> do
+      case result of
+        Err err -> Expect.fail (Debug.toString err)
+        Ok res ->
+          display res
+            |> Expect.equalToContentsOf ("test/golden-results/" ++ golden ++ ".hs")
