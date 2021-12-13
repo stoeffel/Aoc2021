@@ -4,10 +4,19 @@ import Aoc.Grid (Grid)
 import qualified Aoc.Grid as Grid
 import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
-import Prelude (flip, pure)
+import qualified Control.Concurrent
+import System.Console.ANSI (clearScreen)
+import Prelude (IO, flip, pure, putStrLn)
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
+solution =
+  S.Solution
+    { S.parser,
+      S.solution1,
+      S.solution2,
+      S.display = Debug.toString,
+      S.visualize = Just visualize
+    }
 
 data Octopus = Octopus {energy :: Int, flashed :: Int, justFlashed :: Bool}
   deriving (Show, Eq)
@@ -91,3 +100,32 @@ goDark f =
   if justFlashed f
     then f {justFlashed = False, energy = 0}
     else f
+
+visualize :: Grid Octopus -> IO ()
+visualize = go 0
+  where
+    print x octo = do
+      putStrLn (Text.toList (Grid.toText renderOctopus octo))
+      putStrLn (Text.toList ("Step: " ++ Text.fromInt x))
+    go x octopuses = do
+      let newOctopuses =
+            octopuses
+              |> Grid.map incEnergy
+              |> flashOctopuses
+      clearScreen
+      if Grid.all justFlashed newOctopuses
+        then print x newOctopuses
+        else do
+          print x newOctopuses
+          Control.Concurrent.threadDelay 80000
+          let darkAgain = Grid.map goDark newOctopuses
+          Control.Concurrent.threadDelay 100000
+          go (x + 1) darkAgain
+
+renderOctopus :: Maybe Octopus -> Text
+renderOctopus = \case
+  Nothing -> " "
+  Just Octopus {justFlashed, energy} ->
+    if justFlashed
+      then "🌟"
+      else "🐙"

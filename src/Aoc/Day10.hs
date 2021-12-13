@@ -7,7 +7,14 @@ import qualified Aoc.Stack as Stack
 import Prelude (otherwise)
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
+solution =
+  S.Solution
+    { S.parser,
+      S.solution1,
+      S.solution2,
+      S.display = Debug.toString,
+      S.visualize = Nothing
+    }
 
 data Bracket = Angle | Curly | Round | Square
   deriving (Eq, Show)

@@ -7,7 +7,14 @@ import qualified Data.List
 import Prelude (flip, pure, traverse)
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
+solution =
+  S.Solution
+    { S.parser,
+      S.solution1,
+      S.solution2,
+      S.display = Debug.toString,
+      S.visualize = Nothing
+    }
 
 data Entry = Entry
   { signalPattern :: List Signal,

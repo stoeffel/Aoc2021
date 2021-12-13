@@ -10,7 +10,14 @@ import Data.Tree (Forest, Tree (Node))
 import Prelude (Foldable, Functor, Traversable, otherwise, pure)
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
+solution =
+  S.Solution
+    { S.parser,
+      S.solution1,
+      S.solution2,
+      S.display = Debug.toString,
+      S.visualize = Nothing
+    }
 
 data Bracket = Angle | Curly | Round | Square
   deriving (Eq, Show)

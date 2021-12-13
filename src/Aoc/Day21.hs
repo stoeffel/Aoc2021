@@ -4,7 +4,14 @@ import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
+solution =
+  S.Solution
+    { S.parser,
+      S.solution1,
+      S.solution2,
+      S.display = Debug.toString,
+      S.visualize = Nothing
+    }
 
 parser :: P.Parser Text
 parser = map Text.fromList (P.many P.anyChar)

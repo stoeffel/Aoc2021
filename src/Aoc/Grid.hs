@@ -7,11 +7,10 @@ module Aoc.Grid
     -- Constructing / Deconstructing
     fromLists,
     fromCoords,
-    toLists,
+    toText,
     -- Querying
     get,
     keys,
-    values,
     coords,
     maxX,
     maxY,
@@ -23,8 +22,6 @@ module Aoc.Grid
     mapKeys,
     update,
     filter,
-    partition,
-    union,
     -- From instances
     module Data.Foldable,
   )
@@ -61,6 +58,13 @@ fromCoords xs =
   xs
     |> Dict.fromList
     |> Grid
+
+toText :: (Maybe a -> Text) -> Grid a -> Text
+toText toText grid =
+  grid
+    |> toLists
+    |> List.map (Text.join "" << List.map toText)
+    |> Text.join "\n"
 
 toLists :: Grid a -> List (List (Maybe a))
 toLists g =
@@ -120,17 +124,6 @@ mapKeys f (Grid d) = Grid (Data.Map.Strict.mapKeys f d)
 
 keys :: Grid a -> List Coord
 keys (Grid d) = Dict.keys d
-
-values :: Grid a -> List a
-values (Grid d) = Dict.values d
-
-partition :: (Coord -> a -> Bool) -> Grid a -> (Grid a, Grid a)
-partition f (Grid d) =
-  Dict.partition f d
-    |> Tuple.mapBoth Grid Grid
-
-union :: Grid a -> Grid a -> Grid a
-union (Grid d1) (Grid d2) = Grid (Dict.union d1 d2)
 
 maxX :: Grid a -> Int
 maxX g =

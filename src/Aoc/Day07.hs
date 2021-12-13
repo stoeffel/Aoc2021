@@ -8,7 +8,14 @@ import qualified Array
 import qualified Data.List
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
+solution =
+  S.Solution
+    { S.parser,
+      S.solution1,
+      S.solution2,
+      S.display = Debug.toString,
+      S.visualize = Nothing
+    }
 
 parser :: P.Parser (List Int)
 parser = P.csv P.decimal

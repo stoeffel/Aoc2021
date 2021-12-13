@@ -12,7 +12,14 @@ import Prelude (foldr, pure)
 import qualified Prelude
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = Debug.toString}
+solution =
+  S.Solution
+    { S.parser,
+      S.solution1,
+      S.solution2,
+      S.display = Debug.toString,
+      S.visualize = Nothing
+    }
 
 parser :: P.Parser (List (Edge Cave))
 parser = P.lines (edgeParser caveParser)

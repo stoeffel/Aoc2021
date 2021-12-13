@@ -15,6 +15,7 @@ executables:
   aoc:
     dependencies:
       - async >= 2.2.2 && < 2.3
+      - ansi-terminal
       - attoparsec >= 0.13.2 && < 0.14
       - base >= 4.12.0.0 && < 4.16
       - binary >= 0.8.8.0 && < 0.8.9
@@ -35,6 +36,7 @@ executables:
 library:
   dependencies:
   - async >= 2.2.2 && < 2.3
+  - ansi-terminal
   - attoparsec >= 0.13.2 && < 0.14
   - base >= 4.12.0.0 && < 4.16
   - binary >= 0.8.8.0 && < 0.8.9
@@ -56,6 +58,7 @@ tests:
   spec:
     dependencies:
     - containers
+    - ansi-terminal
     - fgl >= 5.7.0.3 && < 5.8
     - logict >= 0.7.1.0 && < 0.8
     - aeson >= 1.4.6.0 && < 1.6

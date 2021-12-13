@@ -4,12 +4,23 @@ module Aoc.Day13 (solution, Dot) where
 
 import Aoc.Grid (Coord (..), Grid)
 import qualified Aoc.Grid as Grid
+import Aoc.Parser ((<*))
 import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
-import Prelude (pure, uncurry)
+import qualified Control.Concurrent
+import Control.Monad (foldM, void)
+import System.Console.ANSI (clearScreen)
+import Prelude (IO, pure, putStrLn, uncurry)
 
 solution :: S.Solution
-solution = S.Solution {S.parser, S.solution1, S.solution2, S.display = identity}
+solution =
+  S.Solution
+    { S.parser,
+      S.solution1,
+      S.solution2,
+      S.display = identity,
+      S.visualize = Just visualize
+    }
 
 data Dot = Dot deriving (Eq, Show)
 
@@ -21,12 +32,12 @@ data Fold = Fold
 
 data Orientation = Horizontal | Vertical deriving (Eq, Show)
 
-parser :: P.Parser (Grid Dot, List Fold)
+parser :: P.Parser (Grid Dot, Fold, List Fold)
 parser = do
-  dots <- P.lines (map (,Dot) coordParser)
-  _ <- P.endOfLine
+  dots <- P.lines (map (,Dot) coordParser) <* P.endOfLine
+  firstFold <- foldParser <* P.endOfLine
   folds <- P.lines foldParser
-  pure (Grid.fromCoords dots, folds)
+  pure (Grid.fromCoords dots, firstFold, folds)
 
 coordParser :: P.Parser Coord
 coordParser = do
@@ -46,55 +57,46 @@ foldParser = do
   value <- P.decimal
   pure Fold {orientation, value}
 
-solution1 :: (Grid Dot, List Fold) -> Text
-solution1 (grid, folds) =
-  case folds of
-    [] -> ""
-    fold : _ ->
-      foldGrid fold grid
-        |> Grid.values
-        |> List.length
-        |> Text.fromInt
+solution1 :: (Grid Dot, Fold, List Fold) -> Text
+solution1 (grid, fold, _) =
+  foldGrid fold grid
+    |> Grid.length
+    |> Debug.toString
 
-solution2 :: (Grid Dot, List Fold) -> Text
-solution2 (grid, folds) =
-  List.foldl foldGrid grid folds
-    |> Grid.toLists
-    |> List.map (Text.join "" << List.map dotToText)
-    |> Text.join "\n"
-
-dotToText :: Maybe Dot -> Text
-dotToText = \case
-  Nothing -> "."
-  Just Dot -> "#"
+solution2 :: (Grid Dot, Fold, List Fold) -> Text
+solution2 (grid, fold, folds) =
+  List.foldl foldGrid grid (fold : folds)
+    |> Grid.toText dotToText
 
 foldGrid :: Fold -> Grid a -> Grid a
 foldGrid Fold {orientation, value} grid =
-  splitGrid value orientation grid
-    |> Tuple.mapSecond (flipGrid orientation)
-    |> uncurry Grid.union
-
-splitGrid :: Int -> Orientation -> Grid a -> (Grid a, Grid a)
-splitGrid target o g =
-  Grid.partition (\c _ -> coordFromOrientation c o <= target) g
-    |> Tuple.mapFirst (Grid.filter (\c _ -> coordFromOrientation c o /= target))
-
-flipGrid :: Orientation -> Grid a -> Grid a
-flipGrid orientation g =
   Grid.mapKeys
-    ( \c -> case orientation of
-        Horizontal -> c {y = flip (Grid.maxY g) (y c)}
-        Vertical -> c {x = flip (Grid.maxX g) (x c)}
+    ( \coord ->
+        if get coord >= value
+          then set coord (modBy max (max - get coord))
+          else coord
     )
-    g
+    grid
+  where
+    (get, max, set) = case orientation of
+      Vertical -> (x, Grid.maxX grid, \c x -> c {x})
+      Horizontal -> (y, Grid.maxY grid, \c y -> c {y})
 
-coordFromOrientation :: Coord -> Orientation -> Int
-coordFromOrientation Coord {x, y} = \case
-  Vertical -> x
-  Horizontal -> y
+dotToText :: Maybe Dot -> Text
+dotToText = \case
+  Nothing -> " "
+  Just Dot -> "█"
 
-flip :: Int -> Int -> Int
-flip maxX x =
-  if x == 0
-    then maxX
-    else modBy maxX (maxX - x)
+visualize :: (Grid Dot, Fold, List Fold) -> IO ()
+visualize (grid, fold, folds) = do
+  void
+    <| foldM
+      ( \acc fold -> do
+          clearScreen
+          let next = foldGrid fold acc
+          putStrLn (Text.toList (Grid.toText dotToText next))
+          Control.Concurrent.threadDelay 100000
+          pure next
+      )
+      grid
+      (fold : folds)

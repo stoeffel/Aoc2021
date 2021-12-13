@@ -64,13 +64,16 @@ main = do
     _ -> Debug.todo "aoc {day} {part}"
 
 runSolution :: Prelude.String -> S.Solution -> Prelude.String -> Prelude.IO ()
-runSolution part S.Solution {S.parser, S.solution1, S.solution2, S.display} path = do
-  let run = case part of
-        "1" -> solution1
-        "2" -> solution2
-        _ -> Debug.todo "Part not found"
+runSolution part S.Solution {S.parser, S.solution1, S.solution2, S.display, S.visualize} path = do
   input <- Data.Text.IO.readFile path
   let parsed = P.parse parser input
   case parsed of
     Err err -> Debug.todo err
-    Ok p -> Prelude.putStrLn (Text.toList (display (run p)))
+    Ok p -> do
+      case part of
+        "1" -> Prelude.putStrLn (Text.toList (display (solution1 p)))
+        "2" -> Prelude.putStrLn (Text.toList (display (solution2 p)))
+        "viz" -> case visualize of
+          Just f -> f p
+          Nothing -> Debug.todo "visualize not implemented"
+        _ -> Debug.todo "Part not found"
