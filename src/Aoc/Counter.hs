@@ -4,9 +4,11 @@ module Aoc.Counter
     foldl,
     fromList,
     add,
+    remove,
     total,
     toList,
     max,
+    min,
     any,
     get,
     member,
@@ -16,10 +18,11 @@ where
 import qualified Data.List
 import Dict (Dict)
 import qualified Dict
-import NriPrelude hiding (max)
+import NriPrelude hiding (max, min)
 import Prelude (flip)
 
 newtype Counter a = Counter (Dict a Int)
+  deriving (Eq, Show)
 
 empty :: Counter a
 empty = Counter Dict.empty
@@ -55,6 +58,11 @@ add k new (Counter counter) =
     counter
     |> Counter
 
+remove :: Ord a => a -> Counter a -> Counter a
+remove k (Counter counter) =
+  Dict.remove k counter
+    |> Counter
+
 total :: Counter a -> Int
 total (Counter counter) = List.sum (Dict.values counter)
 
@@ -67,6 +75,14 @@ max counter =
     [] -> Nothing
     xs ->
       Data.List.maximumBy (\(_, a) (_, b) -> compare a b) xs
+        |> Just
+
+min :: Counter a -> Maybe (a, Int)
+min counter =
+  case toList counter of
+    [] -> Nothing
+    xs ->
+      Data.List.minimumBy (\(_, a) (_, b) -> compare a b) xs
         |> Just
 
 member :: Ord a => a -> Counter a -> Bool
