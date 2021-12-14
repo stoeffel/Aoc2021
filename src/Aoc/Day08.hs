@@ -3,8 +3,11 @@ module Aoc.Day08 (solution) where
 import Aoc.Parser ((*>), (<*))
 import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
+import Control.Applicative ((<|>))
+import qualified Control.Applicative as A
+import qualified Control.Monad.Logic as L
 import qualified Data.List
-import Prelude (flip, pure, traverse)
+import Prelude (flip, foldr, pure, traverse)
 
 solution :: S.Solution
 solution =
@@ -69,8 +72,22 @@ solution1 entries =
 
 solution2 :: List Entry -> Int
 solution2 entries =
-  List.filterMap decodeEntry entries
-    |> List.sum
+  List.foldl
+    ( \entry acc ->
+        L.observe (decodeLogic entry) + acc
+    )
+    0
+    entries
+
+decodeLogic :: Entry -> L.Logic Int
+decodeLogic Entry {signalPattern, output} = do
+  let uniqueSignals = List.filterMap getUniqueSignals signalPattern
+  mapping <- choose (Data.List.permutations [A, B, C, D, E, F, G])
+  List.all (\(k, v) -> decodeSignal mapping v == Just k) uniqueSignals
+    |> L.guard
+  case decodeOutput output mapping of
+    Nothing -> L.mzero
+    Just k -> pure k
 
 getUniqueSignals :: Signal -> Maybe (Int, Signal)
 getUniqueSignals signal =
@@ -80,19 +97,6 @@ getUniqueSignals signal =
     4 -> Just (4, signal)
     7 -> Just (8, signal)
     _ -> Nothing
-
-decodeEntry :: Entry -> Maybe Int
-decodeEntry Entry {signalPattern, output} =
-  [A, B, C, D, E, F, G]
-    |> Data.List.permutations
-    |> List.filter (findMapping signalPattern)
-    |> List.filterMap (decodeOutput output)
-    |> List.head
-
-findMapping :: List Signal -> Signal -> Bool
-findMapping signalPattern mapping =
-  List.filterMap getUniqueSignals signalPattern
-    |> List.all (\(k, v) -> decodeSignal mapping v == Just k)
 
 decodeOutput :: List Signal -> Signal -> Maybe Int
 decodeOutput output mapping =
@@ -135,3 +139,6 @@ joinNumbers numbers =
   List.map Text.fromInt numbers
     |> Text.join ""
     |> Text.toInt
+
+choose :: List a -> L.Logic a
+choose = foldr ((<|>) << pure) A.empty
