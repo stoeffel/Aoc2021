@@ -13,8 +13,6 @@ module Aoc.Counter
     any,
     get,
     member,
-    set,
-    filter,
   )
 where
 
@@ -64,11 +62,6 @@ add k new (Counter counter) =
     counter
     |> Counter
 
-set :: Ord a => a -> Int -> Counter a -> Counter a
-set k new (Counter counter) =
-  Dict.update k (\_ -> Just new) counter
-    |> Counter
-
 remove :: Ord a => a -> Counter a -> Counter a
 remove k (Counter counter) =
   Dict.remove k counter
@@ -98,8 +91,3 @@ min counter =
 
 member :: Ord a => a -> Counter a -> Bool
 member k (Counter counter) = Dict.member k counter
-
-filter :: (a -> Bool) -> Counter a -> Counter a
-filter p (Counter counter) =
-  Dict.filter (\k _ -> p k) counter
-    |> Counter

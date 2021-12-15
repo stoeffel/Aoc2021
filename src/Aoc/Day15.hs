@@ -1,13 +1,10 @@
 module Aoc.Day15 (solution) where
 
-import Aoc.Counter (Counter)
-import qualified Aoc.Counter as Counter
 import Aoc.Grid (Coord (..), Grid)
 import qualified Aoc.Grid as Grid
 import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
 import qualified Data.HashPSQ as Q
-import qualified Data.List
 import Set (Set)
 import qualified Set as Set
 import Prelude (flip, pure)
