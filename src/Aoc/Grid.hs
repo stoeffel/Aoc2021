@@ -8,20 +8,24 @@ module Aoc.Grid
     fromLists,
     fromCoords,
     toText,
+    toLists,
+    empty,
     -- Querying
     get,
     keys,
     coords,
     maxX,
     maxY,
-    neightbours,
+    neighbors,
     surrounding,
     -- Modifying
+    insert,
     foldWithKey,
     map,
     mapKeys,
     update,
     filter,
+    union,
     -- From instances
     module Data.Foldable,
   )
@@ -29,6 +33,7 @@ where
 
 import qualified Array
 import Data.Foldable
+import Data.Hashable (Hashable)
 import qualified Data.Map.Strict
 import Dict (Dict)
 import qualified Dict
@@ -39,7 +44,9 @@ newtype Grid a = Grid (Dict Coord a)
   deriving (Eq, Show, Functor, Foldable)
 
 data Coord = Coord {x :: Int, y :: Int}
-  deriving (Show, Eq, Ord)
+  deriving (Show, Eq, Ord, Generic)
+
+instance Hashable Coord
 
 fromLists :: List (List a) -> Grid a
 fromLists xs =
@@ -59,22 +66,25 @@ fromCoords xs =
     |> Dict.fromList
     |> Grid
 
+empty :: Grid a
+empty = Grid Dict.empty
+
 toText :: (Maybe a -> Text) -> Grid a -> Text
 toText toText grid =
   grid
-    |> toLists
+    |> toLists identity
     |> List.map (Text.join "" << List.map toText)
     |> Text.join "\n"
 
-toLists :: Grid a -> List (List (Maybe a))
-toLists g =
+toLists :: (Maybe a -> b) -> Grid a -> List (List b)
+toLists toElement g =
   foldWithKey
     ( \Coord {x, y} v acc ->
         case Array.get y acc of
           Nothing -> acc
-          Just row -> Array.set y (Array.set x (Just v) row) acc
+          Just row -> Array.set y (Array.set x (toElement (Just v)) row) acc
     )
-    ( Array.repeat (maxX g + 1) Nothing
+    ( Array.repeat (maxX g + 1) (toElement Nothing)
         |> Array.repeat (maxY g + 1)
     )
     g
@@ -96,6 +106,9 @@ get c (Grid d) = Dict.get c d
 update :: Coord -> (a -> a) -> Grid a -> Grid a
 update c f (Grid d) = Grid (Dict.update c (Maybe.map f) d)
 
+insert :: Coord -> a -> Grid a -> Grid a
+insert c v (Grid d) = Grid (Dict.insert c v d)
+
 filter :: (Coord -> a -> Bool) -> Grid a -> Grid a
 filter f (Grid d) = Grid (Dict.filter f d)
 
@@ -111,8 +124,8 @@ surrounding coord@Coord {x, y} =
     coord {x = x + 1, y = y + 1}
   ]
 
-neightbours :: Coord -> List Coord
-neightbours coord@Coord {x, y} =
+neighbors :: Coord -> List Coord
+neighbors coord@Coord {x, y} =
   [ coord {y = y - 1},
     coord {x = x + 1},
     coord {y = y + 1},
@@ -132,3 +145,6 @@ maxX g =
 maxY :: Grid a -> Int
 maxY g =
   List.foldl (\Coord {y} -> max y) 0 (keys g)
+
+union :: Grid a -> Grid a -> Grid a
+union (Grid d1) (Grid d2) = Grid (Dict.union d1 d2)

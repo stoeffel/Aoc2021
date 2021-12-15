@@ -1,6 +1,7 @@
 module Aoc.Counter
   ( Counter,
     empty,
+    singleton,
     foldl,
     fromList,
     add,
@@ -12,6 +13,8 @@ module Aoc.Counter
     any,
     get,
     member,
+    set,
+    filter,
   )
 where
 
@@ -26,6 +29,9 @@ newtype Counter a = Counter (Dict a Int)
 
 empty :: Counter a
 empty = Counter Dict.empty
+
+singleton :: a -> Int -> Counter a
+singleton a i = Counter (Dict.singleton a i)
 
 foldl :: (a -> Int -> b -> b) -> b -> Counter a -> b
 foldl f acc (Counter counter) = Dict.foldl f acc counter
@@ -58,6 +64,11 @@ add k new (Counter counter) =
     counter
     |> Counter
 
+set :: Ord a => a -> Int -> Counter a -> Counter a
+set k new (Counter counter) =
+  Dict.update k (\_ -> Just new) counter
+    |> Counter
+
 remove :: Ord a => a -> Counter a -> Counter a
 remove k (Counter counter) =
   Dict.remove k counter
@@ -87,3 +98,8 @@ min counter =
 
 member :: Ord a => a -> Counter a -> Bool
 member k (Counter counter) = Dict.member k counter
+
+filter :: (a -> Bool) -> Counter a -> Counter a
+filter p (Counter counter) =
+  Dict.filter (\k _ -> p k) counter
+    |> Counter

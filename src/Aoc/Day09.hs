@@ -43,7 +43,7 @@ solution2 input =
 
 isLowPoint :: Grid Int -> Coord -> Int -> Bool
 isLowPoint all coord cell =
-  Grid.neightbours coord
+  Grid.neighbors coord
     |> List.filterMap (flip Grid.get all)
     |> List.all (> cell)
 
@@ -57,7 +57,7 @@ findBasins all acc coord
       List.foldl
         (flip (findBasins all))
         (Set.insert coord acc)
-        (Grid.neightbours coord)
+        (Grid.neighbors coord)
 
 desc :: Int -> Int -> Ordering
 desc a b = case compare a b of

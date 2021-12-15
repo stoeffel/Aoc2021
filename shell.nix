@@ -4,6 +4,7 @@ in pkgs.haskellPackages.shellFor {
   packages = p: [ (import ./default.nix) ];
   buildInputs = [
     pkgs.cabal-install
+    pkgs.zlib
     pkgs.haskellPackages.ghcid
     pkgs.haskellPackages.hpack
     pkgs.ormolu

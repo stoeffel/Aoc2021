@@ -14,6 +14,8 @@ extra-source-files:
 executables:
   aoc:
     dependencies:
+      - psqueues >= 0.2.7.2 && < 0.3
+      - hashable
       - async >= 2.2.2 && < 2.3
       - ansi-terminal
       - attoparsec >= 0.13.2 && < 0.14
@@ -35,6 +37,8 @@ executables:
       - src
 library:
   dependencies:
+  - psqueues >= 0.2.7.2 && < 0.3
+  - hashable
   - async >= 2.2.2 && < 2.3
   - ansi-terminal
   - attoparsec >= 0.13.2 && < 0.14
@@ -57,6 +61,8 @@ library:
 tests:
   spec:
     dependencies:
+    - psqueues >= 0.2.7.2 && < 0.3
+    - hashable
     - containers
     - ansi-terminal
     - fgl >= 5.7.0.3 && < 5.8
@@ -84,6 +90,8 @@ tests:
     # unique ports, but if we start them in parallel this will not always work.
     ghc-options:
       - -fno-warn-type-defaults
+      - -threaded
+      - -O2
 default-extensions:
   - DataKinds
   - DeriveGeneric
@@ -97,7 +105,6 @@ default-extensions:
   - OverloadedStrings
   - PartialTypeSignatures
   - ScopedTypeVariables
-  - Strict
   - TypeOperators
   - ExtendedDefaultRules
   - NumericUnderscores
