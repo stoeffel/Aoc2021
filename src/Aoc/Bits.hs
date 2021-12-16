@@ -1,10 +1,12 @@
 module Aoc.Bits
   ( Bits,
+    Bit (..),
     parser,
     mostCommonBit,
     complement,
     reverseBit,
     multiply,
+    toInt,
   )
 where
 

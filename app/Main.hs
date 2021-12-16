@@ -52,6 +52,7 @@ main = do
     ["14", part] -> runSolution part Aoc.Day14.solution "test/assets/day14.txt"
     ["15", part] -> runSolution part Aoc.Day15.solution "test/assets/day15.txt"
     ["15", part, "example"] -> runSolution part Aoc.Day15.solution "test/assets/day15-example.txt"
+    ["16", part, "example"] -> runSolution part Aoc.Day16.solution "test/assets/day16-example.txt"
     ["16", part] -> runSolution part Aoc.Day16.solution "test/assets/day16.txt"
     ["17", part] -> runSolution part Aoc.Day17.solution "test/assets/day17.txt"
     ["18", part] -> runSolution part Aoc.Day18.solution "test/assets/day18.txt"
