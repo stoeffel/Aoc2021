@@ -56,6 +56,30 @@ library:
   - logict >= 0.7.1.0 && < 0.8
   exposed-modules:
   - Aoc.Day1
+  - Aoc.Day2
+  - Aoc.Day3
+  - Aoc.Day4
+  - Aoc.Day5
+  - Aoc.Day6
+  - Aoc.Day7
+  - Aoc.Day8
+  - Aoc.Day9
+  - Aoc.Day10
+  - Aoc.Day11
+  - Aoc.Day12
+  - Aoc.Day13
+  - Aoc.Day14
+  - Aoc.Day15
+  - Aoc.Day16
+  - Aoc.Day17
+  - Aoc.Day18
+  - Aoc.Day19
+  - Aoc.Day20
+  - Aoc.Day21
+  - Aoc.Day22
+  - Aoc.Day23
+  - Aoc.Day24
+  - Aoc.Day25
   - Aoc.Grid
   source-dirs: src
 tests:
