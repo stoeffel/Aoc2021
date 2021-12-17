@@ -5,6 +5,7 @@ module Aoc.Parser
     oneOf,
     csv,
     digitInt,
+    fromResult,
     module Control.Applicative,
     module Data.Attoparsec.Text,
   )
@@ -14,7 +15,7 @@ import Control.Applicative (many, optional, (*>), (<*))
 import Data.Attoparsec.Text hiding (Result, parse)
 import qualified Data.Char
 import Data.Foldable (asum)
-import Prelude (Either (Left, Right), fromIntegral, pure)
+import Prelude (Either (Left, Right), fail, fromIntegral, pure)
 
 oneOf :: List (Parser a) -> Parser a
 oneOf = asum
@@ -38,3 +39,8 @@ csv p = sepBy1 p (char ',')
 
 digitInt :: Parser Int
 digitInt = map (Data.Char.digitToInt >> fromIntegral) digit
+
+fromResult :: Result Text a -> Parser a
+fromResult = \case
+  Ok a -> pure a
+  Err err -> fail (Text.toList err)
