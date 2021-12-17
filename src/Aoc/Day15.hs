@@ -5,9 +5,9 @@ import qualified Aoc.Grid as Grid
 import qualified Aoc.Parser as P
 import qualified Aoc.Solution as S
 import qualified Data.HashPSQ as Q
-import Set (Set)
-import qualified Set as Set
-import Prelude (flip, pure)
+import Dict (Dict)
+import qualified Dict as Dict
+import Prelude (flip, pure, uncurry)
 
 solution :: S.Solution
 solution =
@@ -26,10 +26,10 @@ parser = do
     |> Grid.fromLists
     |> pure
 
-solution1 :: Grid Int -> Int
+solution1 :: Grid Int -> Maybe Int
 solution1 grid = findCheapestPath grid
 
-solution2 :: Grid Int -> Int
+solution2 :: Grid Int -> Maybe Int
 solution2 grid =
   expandGrid 5 grid
     |> findCheapestPath
@@ -62,48 +62,52 @@ wrap x =
   let remainder = modBy 9 x
    in if remainder == 0 then 9 else remainder
 
-findCheapestPath :: Grid Int -> Int
+type Frontier = Q.HashPSQ Coord Int ()
+
+type CostSoFar = Dict Coord Int
+
+findCheapestPath :: Grid Int -> Maybe Int
 findCheapestPath grid =
   cheapestPath
     (Coord {x = Grid.maxX grid, y = Grid.maxY grid})
     grid
-    Set.empty
-    (Q.singleton (Coord 0 0) 0 ())
+    (Q.singleton start 0 ())
+    (Dict.singleton start 0)
 
-cheapestPath :: Coord -> Grid Int -> Set Coord -> Q.HashPSQ Coord Int () -> Int
-cheapestPath target grid visited costs =
-  case Q.minView costs of
-    Nothing -> 0
-    Just (coord, cost, (), newCosts) ->
-      if coord == target
-        then cost
-        else
-          let newVisited = Set.insert coord visited
-           in updateNeighbors grid newVisited (cost, coord) newCosts
-                |> cheapestPath target grid newVisited
+start :: Coord
+start = Coord {x = 0, y = 0}
 
-updateNeighbors ::
-  Grid Int ->
-  Set Coord ->
-  (Int, Coord) ->
-  Q.HashPSQ Coord Int () ->
-  Q.HashPSQ Coord Int ()
-updateNeighbors grid visited (currentCost, current) costs =
-  Grid.neighbors current
-    |> List.filter (not << flip Set.member visited)
-    |> List.filterMap
-      ( \n ->
-          Grid.get n grid
-            |> Maybe.map ((,) n)
-      )
-    |> List.foldl
-      ( \(neighbor, neighborCost) costs ->
-          let newCost = currentCost + neighborCost
-           in case Q.lookup neighbor costs of
-                Nothing -> Q.insert neighbor newCost () costs
-                Just (c, _) ->
-                  if c < newCost
-                    then costs
-                    else Q.insert neighbor newCost () costs
-      )
-      costs
+cheapestPath :: Coord -> Grid Int -> Frontier -> CostSoFar -> Maybe Int
+cheapestPath target grid frontier costSoFar =
+  case Q.minView frontier of
+    Nothing -> Nothing
+    Just (coord, _, _, _) | coord == target -> Dict.get target costSoFar
+    Just (coord, _, _, newFrontier) ->
+      Grid.neighbors coord
+        |> List.filterMap (\n -> Maybe.map ((,) n) (Grid.get n grid))
+        |> List.foldl (updateNeighbor target coord) (newFrontier, costSoFar)
+        |> uncurry (cheapestPath target grid)
+
+updateNeighbor :: Coord -> Coord -> (Coord, Int) -> (Frontier, CostSoFar) -> (Frontier, CostSoFar)
+updateNeighbor target current (neighbor, neighborCost) (frontier, costSoFar) =
+  case Dict.get current costSoFar of
+    Nothing -> (frontier, costSoFar)
+    Just currentCost ->
+      let newCost = currentCost + neighborCost
+          priority = newCost + heuristic target neighbor
+       in case Dict.get neighbor costSoFar of
+            Just c ->
+              if newCost < c
+                then
+                  ( Q.insert neighbor priority () frontier,
+                    Dict.insert neighbor newCost costSoFar
+                  )
+                else (frontier, costSoFar)
+            Nothing ->
+              ( Q.insert neighbor priority () frontier,
+                Dict.insert neighbor newCost costSoFar
+              )
+
+heuristic :: Coord -> Coord -> Int
+heuristic a b =
+  abs (x a - x b) + abs (y a - y b)
