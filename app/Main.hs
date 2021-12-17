@@ -16,6 +16,7 @@ import qualified Aoc.Day13
 import qualified Aoc.Day14
 import qualified Aoc.Day15
 import qualified Aoc.Day16
+import qualified Aoc.Day16Parser
 import qualified Aoc.Day17
 import qualified Aoc.Day18
 import qualified Aoc.Day19
@@ -53,6 +54,7 @@ main = do
     ["15", part] -> runSolution part Aoc.Day15.solution "test/assets/day15.txt"
     ["15", part, "example"] -> runSolution part Aoc.Day15.solution "test/assets/day15-example.txt"
     ["16", part, "example"] -> runSolution part Aoc.Day16.solution "test/assets/day16-example.txt"
+    ["16", part, "parser"] -> runSolution part Aoc.Day16Parser.solution "test/assets/day16.txt"
     ["16", part] -> runSolution part Aoc.Day16.solution "test/assets/day16.txt"
     ["17", part] -> runSolution part Aoc.Day17.solution "test/assets/day17.txt"
     ["18", part] -> runSolution part Aoc.Day18.solution "test/assets/day18.txt"
