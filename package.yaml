@@ -1,5 +1,5 @@
 name: aoc21
-synopsis: Verify examples in your docs.
+synopsis: Aoc
 description: Please see the README at <https://github.com/Stoeffel/aoc21/tree/trunk/#readme>.
 author: stoeffel
 version: 0.0.0.1
@@ -15,6 +15,7 @@ executables:
   aoc:
     dependencies:
       - psqueues >= 0.2.7.2 && < 0.3
+      - mtl
       - hashable
       - async >= 2.2.2 && < 2.3
       - ansi-terminal
@@ -38,6 +39,7 @@ executables:
 library:
   dependencies:
   - psqueues >= 0.2.7.2 && < 0.3
+  - mtl
   - hashable
   - async >= 2.2.2 && < 2.3
   - ansi-terminal
@@ -55,15 +57,15 @@ library:
   - fgl >= 5.7.0.3 && < 5.8
   - logict >= 0.7.1.0 && < 0.8
   exposed-modules:
-  - Aoc.Day1
-  - Aoc.Day2
-  - Aoc.Day3
-  - Aoc.Day4
-  - Aoc.Day5
-  - Aoc.Day6
-  - Aoc.Day7
-  - Aoc.Day8
-  - Aoc.Day9
+  - Aoc.Day01
+  - Aoc.Day02
+  - Aoc.Day03
+  - Aoc.Day04
+  - Aoc.Day05
+  - Aoc.Day06
+  - Aoc.Day07
+  - Aoc.Day08
+  - Aoc.Day09
   - Aoc.Day10
   - Aoc.Day11
   - Aoc.Day12
@@ -86,6 +88,7 @@ tests:
   spec:
     dependencies:
     - psqueues >= 0.2.7.2 && < 0.3
+    - mtl
     - hashable
     - containers
     - ansi-terminal
@@ -129,6 +132,7 @@ default-extensions:
   - OverloadedStrings
   - PartialTypeSignatures
   - ScopedTypeVariables
+  - Strict
   - TypeOperators
   - ExtendedDefaultRules
   - NumericUnderscores
