@@ -31,6 +31,7 @@ import qualified Aoc.Parser as P
 import Aoc.Solution
 import qualified Data.Text.IO
 import qualified Expect
+import qualified System.Environment
 import Test (Test, describe, test)
 import qualified Test
 import qualified Prelude
@@ -41,47 +42,58 @@ main = do
   Test.run (describe "AOC 2021" tests)
 
 buildTests :: Prelude.IO (List Test)
-buildTests =
-  Prelude.sequence
-    [ mkTests Aoc.Day01.solution "Day01",
-      mkTests Aoc.Day02.solution "Day02",
-      mkTests Aoc.Day03.solution "Day03",
-      mkTests Aoc.Day04.solution "Day04",
-      mkTests Aoc.Day05.solution "Day05",
-      mkTests Aoc.Day06.solution "Day06",
-      mkTests Aoc.Day07.solution "Day07",
-      mkTests Aoc.Day08.solution "Day08",
-      mkTests Aoc.Day09.solution "Day09",
-      mkTests Aoc.Day10.solution "Day10",
-      mkTests Aoc.Day10Parser.solution "Day10Parser",
-      mkTests Aoc.Day11.solution "Day11",
-      mkTests Aoc.Day12.solution "Day12",
-      mkTests Aoc.Day13.solution "Day13",
-      mkTests Aoc.Day14.solution "Day14",
-      mkTests Aoc.Day15.solution "Day15",
-      mkTests Aoc.Day16.solution "Day16",
-      mkTests Aoc.Day16Parser.solution "Day16Parser",
-      mkTests Aoc.Day17.solution "Day17",
-      mkTests Aoc.Day18.solution "Day18",
-      -- [ mkTests Aoc.Day19.solution "Day19"
-      mkTests Aoc.Day20.solution "Day20",
-      mkTests Aoc.Day21.solution "Day21",
-      mkTests Aoc.Day22.solution "Day22",
-      mkTests Aoc.Day23.solution "Day23",
-      mkTests Aoc.Day24.solution "Day24",
-      mkTests Aoc.Day25.solution "Day25"
-    ]
-
-mkTests :: Solution -> Text -> Prelude.IO Test
-mkTests solution name = do
+buildTests = do
+  env <- System.Environment.getEnv "DAY"
+  let day =
+        if env /= ""
+          then "Day" ++ Text.fromList env
+          else ""
   tests <-
     Prelude.sequence
-      [ mkTest solution name Part1 Example,
-        mkTest solution name Part1 Real,
-        mkTest solution name Part2 Example,
-        mkTest solution name Part2 Real
+      [ mkTests day Aoc.Day01.solution "Day01",
+        mkTests day Aoc.Day02.solution "Day02",
+        mkTests day Aoc.Day03.solution "Day03",
+        mkTests day Aoc.Day04.solution "Day04",
+        mkTests day Aoc.Day05.solution "Day05",
+        mkTests day Aoc.Day06.solution "Day06",
+        mkTests day Aoc.Day07.solution "Day07",
+        mkTests day Aoc.Day08.solution "Day08",
+        mkTests day Aoc.Day09.solution "Day09",
+        mkTests day Aoc.Day10.solution "Day10",
+        mkTests day Aoc.Day10Parser.solution "Day10Parser",
+        mkTests day Aoc.Day11.solution "Day11",
+        mkTests day Aoc.Day12.solution "Day12",
+        mkTests day Aoc.Day13.solution "Day13",
+        mkTests day Aoc.Day14.solution "Day14",
+        mkTests day Aoc.Day15.solution "Day15",
+        mkTests day Aoc.Day16.solution "Day16",
+        mkTests day Aoc.Day16Parser.solution "Day16Parser",
+        mkTests day Aoc.Day17.solution "Day17",
+        mkTests day Aoc.Day18.solution "Day18",
+        -- [ mkTests day Aoc.Day19.solution "Day19"
+        mkTests day Aoc.Day20.solution "Day20",
+        mkTests day Aoc.Day21.solution "Day21",
+        mkTests day Aoc.Day22.solution "Day22",
+        mkTests day Aoc.Day23.solution "Day23",
+        mkTests day Aoc.Day24.solution "Day24",
+        mkTests day Aoc.Day25.solution "Day25"
       ]
-  Prelude.pure (describe name tests)
+  List.filterMap identity tests
+    |> Prelude.pure
+
+mkTests :: Text -> Solution -> Text -> Prelude.IO (Maybe Test)
+mkTests day solution name
+  | day == name || day == "" =
+    map Just <| do
+      tests <-
+        Prelude.sequence
+          [ mkTest solution name Part1 Example,
+            mkTest solution name Part1 Real,
+            mkTest solution name Part2 Example,
+            mkTest solution name Part2 Real
+          ]
+      Prelude.pure (describe name tests)
+  | Prelude.otherwise = Prelude.pure Nothing
 
 data Run = Example | Real
   deriving (Show)
