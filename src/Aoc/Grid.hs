@@ -18,14 +18,17 @@ module Aoc.Grid
     maxY,
     neighbors,
     surrounding,
+    around,
     -- Modifying
     insert,
     foldWithKey,
     map,
+    mapWithKey,
     mapKeys,
     update,
     filter,
     union,
+    extend,
     -- From instances
     module Data.Foldable,
   )
@@ -97,6 +100,9 @@ foldWithKey f z (Grid d) = Dict.foldl f z d
 map :: (a -> b) -> Grid a -> Grid b
 map = fmap
 
+mapWithKey :: (Coord -> a -> b) -> Grid a -> Grid b
+mapWithKey f (Grid d) = Grid (Dict.map f d)
+
 coords :: Grid a -> List Coord
 coords = foldWithKey (\c _ -> (:) c) []
 
@@ -132,8 +138,21 @@ neighbors coord@Coord {x, y} =
     coord {x = x - 1}
   ]
 
+around :: Coord -> List Coord
+around coord@Coord {x, y} =
+  [ coord {x = x - 1, y = y - 1},
+    coord {y = y - 1},
+    coord {x = x + 1, y = y - 1},
+    coord {x = x - 1},
+    coord,
+    coord {x = x + 1},
+    coord {x = x - 1, y = y + 1},
+    coord {y = y + 1},
+    coord {x = x + 1, y = y + 1}
+  ]
+
 mapKeys :: (Coord -> Coord) -> Grid a -> Grid a
-mapKeys f (Grid d) = Grid (Data.Map.Strict.mapKeys f d)
+mapKeys f g = foldWithKey (\c v -> insert (f c) v) empty g
 
 keys :: Grid a -> List Coord
 keys (Grid d) = Dict.keys d
@@ -148,3 +167,19 @@ maxY g =
 
 union :: Grid a -> Grid a -> Grid a
 union (Grid d1) (Grid d2) = Grid (Dict.union d1 d2)
+
+extend :: a -> Int -> Grid a -> Grid a
+extend v n g =
+  toLists (Maybe.withDefault v) g
+    |> List.map (extendLeft n v >> extendRight n v)
+    |> extendLeft n row
+    |> extendRight n row
+    |> fromLists
+  where
+    row = List.repeat (maxX g + 1 + n * 2) v
+
+extendLeft :: Int -> a -> List a -> List a
+extendLeft n x xs = List.repeat n x ++ xs
+
+extendRight :: Int -> a -> List a -> List a
+extendRight n x xs = xs ++ List.repeat n x
