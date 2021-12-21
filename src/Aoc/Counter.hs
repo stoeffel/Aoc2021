@@ -13,10 +13,13 @@ module Aoc.Counter
     any,
     get,
     member,
+    isEmpty,
+    union,
   )
 where
 
 import qualified Data.List
+import qualified Data.Map.Strict
 import Dict (Dict)
 import qualified Dict
 import NriPrelude hiding (max, min)
@@ -27,6 +30,9 @@ newtype Counter a = Counter (Dict a Int)
 
 empty :: Counter a
 empty = Counter Dict.empty
+
+isEmpty :: Counter a -> Bool
+isEmpty (Counter dict) = Dict.isEmpty dict
 
 singleton :: a -> Int -> Counter a
 singleton a i = Counter (Dict.singleton a i)
@@ -91,3 +97,8 @@ min counter =
 
 member :: Ord a => a -> Counter a -> Bool
 member k (Counter counter) = Dict.member k counter
+
+union :: Ord a => Counter a -> Counter a -> Counter a
+union (Counter counter1) (Counter counter2) =
+  Data.Map.Strict.unionWith (+) counter1 counter2
+    |> Counter
