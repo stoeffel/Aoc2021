@@ -5,6 +5,7 @@ module Aoc.Counter
     foldl,
     fromList,
     add,
+    keys,
     remove,
     total,
     toList,
@@ -15,6 +16,7 @@ module Aoc.Counter
     member,
     isEmpty,
     union,
+    filterMap,
   )
 where
 
@@ -36,6 +38,9 @@ isEmpty (Counter dict) = Dict.isEmpty dict
 
 singleton :: a -> Int -> Counter a
 singleton a i = Counter (Dict.singleton a i)
+
+keys :: Counter a -> List a
+keys (Counter dict) = Dict.keys dict
 
 foldl :: (a -> Int -> b -> b) -> b -> Counter a -> b
 foldl f acc (Counter counter) = Dict.foldl f acc counter
@@ -102,3 +107,14 @@ union :: Ord a => Counter a -> Counter a -> Counter a
 union (Counter counter1) (Counter counter2) =
   Data.Map.Strict.unionWith (+) counter1 counter2
     |> Counter
+
+filterMap :: Ord b => (a -> Maybe b) -> Counter a -> Counter b
+filterMap f (Counter counter) =
+  Dict.foldl
+    ( \k v acc ->
+        case f k of
+          Nothing -> acc
+          Just b -> add b v acc
+    )
+    empty
+    counter
