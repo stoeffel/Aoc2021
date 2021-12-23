@@ -1,3 +1,4 @@
+-- NOTE done by hand
 module Aoc.Day23 (solution) where
 
 import qualified Aoc.Parser as P
