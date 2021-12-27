@@ -2,6 +2,7 @@ module Aoc.Parser
   ( parse,
     lines,
     keywords,
+    keychars,
     oneOf,
     csv,
     digitInt,
@@ -32,6 +33,11 @@ lines p = many (p <* optional endOfLine)
 keywords :: List (Text, a) -> Parser a
 keywords =
   List.map (\(x, y) -> pure y <* string x)
+    >> oneOf
+
+keychars :: List (Char, a) -> Parser a
+keychars =
+  List.map (\(x, y) -> pure y <* char x)
     >> oneOf
 
 csv :: Parser a -> Parser (List a)

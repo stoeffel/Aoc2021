@@ -68,6 +68,7 @@ main = do
     ["23", part] -> runSolution part Aoc.Day23.solution "test/assets/day23.txt"
     -- ["24", part] -> runSolution part Aoc.Day24.solution "test/assets/day24.txt"
     ["25", part] -> runSolution part Aoc.Day25.solution "test/assets/day25.txt"
+    ["25", part, "example"] -> runSolution part Aoc.Day25.solution "test/assets/day25-example.txt"
     _ -> Debug.todo "aoc {day} {part}"
 
 runSolution :: Prelude.String -> S.Solution -> Prelude.String -> Prelude.IO ()

@@ -29,6 +29,7 @@ module Aoc.Grid
     filter,
     union,
     extend,
+    remove,
     -- From instances
     module Data.Foldable,
   )
@@ -111,6 +112,9 @@ get c (Grid d) = Dict.get c d
 
 update :: Coord -> (a -> a) -> Grid a -> Grid a
 update c f (Grid d) = Grid (Dict.update c (Maybe.map f) d)
+
+remove :: Coord -> Grid a -> Grid a
+remove c (Grid d) = Grid (Dict.remove c d)
 
 insert :: Coord -> a -> Grid a -> Grid a
 insert c v (Grid d) = Grid (Dict.insert c v d)
