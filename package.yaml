@@ -80,7 +80,6 @@ library:
   - Aoc.Day21
   - Aoc.Day22
   - Aoc.Day23
-  - Aoc.Day24
   - Aoc.Day25
   - Aoc.Grid
   source-dirs: src

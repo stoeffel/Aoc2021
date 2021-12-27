@@ -25,7 +25,7 @@ import qualified Aoc.Day20
 import qualified Aoc.Day21
 import qualified Aoc.Day22
 import qualified Aoc.Day23
-import qualified Aoc.Day24
+-- import qualified Aoc.Day24
 import qualified Aoc.Day25
 import qualified Aoc.Parser as P
 import Aoc.Solution
@@ -75,7 +75,7 @@ buildTests = do
         mkTests day Aoc.Day21.solution "Day21",
         mkTests day Aoc.Day22.solution "Day22",
         mkTests day Aoc.Day23.solution "Day23",
-        mkTests day Aoc.Day24.solution "Day24",
+        -- mkTests day Aoc.Day24.solution "Day24",
         mkTests day Aoc.Day25.solution "Day25"
       ]
   List.filterMap identity tests

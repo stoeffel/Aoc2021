@@ -24,7 +24,7 @@ import qualified Aoc.Day20
 import qualified Aoc.Day21
 import qualified Aoc.Day22
 import qualified Aoc.Day23
-import qualified Aoc.Day24
+-- import qualified Aoc.Day24
 import qualified Aoc.Day25
 import qualified Aoc.Grid as G
 import qualified Aoc.Parser as P
@@ -66,7 +66,7 @@ main = do
     ["22", part] -> runSolution part Aoc.Day22.solution "test/assets/day22.txt"
     ["22", part, "example"] -> runSolution part Aoc.Day22.solution "test/assets/day22-example.txt"
     ["23", part] -> runSolution part Aoc.Day23.solution "test/assets/day23.txt"
-    ["24", part] -> runSolution part Aoc.Day24.solution "test/assets/day24.txt"
+    -- ["24", part] -> runSolution part Aoc.Day24.solution "test/assets/day24.txt"
     ["25", part] -> runSolution part Aoc.Day25.solution "test/assets/day25.txt"
     _ -> Debug.todo "aoc {day} {part}"
 
